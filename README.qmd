@@ -1,0 +1,37 @@
+---
+title: torchgnn
+format: gfm
+---
+
+Graph Neural Networks for [`{torch}`](https://mlverse.github.io/torch/) in R.
+
+
+## Installation
+
+Install the development version of the package using
+
+```{r, eval = FALSE}
+pak::pak("josiahparry/torchgnn")
+```
+
+
+## Usage
+
+Use `gcn_model()` to create a high level model:
+
+```{r}
+library(torchgnn)
+
+gcn_model(
+  in_features = 14,
+  hidden_dims = c(56, 56),
+  out_features = 1,
+  output_activation = torch::nnf_sigmoid
+)
+```
+
+Or create individual layers using `gcn_layer()`:
+
+```{r}
+gcn_layer(10, 1)
+```
