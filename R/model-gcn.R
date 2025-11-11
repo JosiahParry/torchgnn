@@ -105,6 +105,6 @@ gcn_model <- nn_module(
         }
       }
     }
-    return(x)
+    x
   }
 )

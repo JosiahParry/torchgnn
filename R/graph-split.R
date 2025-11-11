@@ -40,6 +40,7 @@
 #' predictions <- model(X, A_sparse)
 #' train_loss <- nnf_mse_loss(predictions[split$train_id], y[split$train_id])
 #' }
+#' @export
 graph_split <- function(data, prop = c(0.6, 0.2, 0.2), seed = NULL) {
   # Validate prop
   if (!length(prop) %in% c(2, 3)) {
