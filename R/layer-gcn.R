@@ -31,10 +31,6 @@
 #' @param adj Tensor `n_nodes x n_nodes`. Adjacency matrix defining graph structure.
 #'   Can be binary (0/1) or weighted. If \code{edge_weight} is provided, \code{adj}
 #'   should be binary and weights will be applied from \code{edge_weight}
-#' @param edge_weight Tensor `n_nodes x n_nodes` or NULL. Optional edge weights.
-#'   If NULL, uses values from \code{adj}. When \code{normalize = TRUE}, edge weights
-#'   are used to compute degrees: \eqn{\hat{d}_i = 1 + \sum_{j \in N(i)} e_{j,i}}.
-#'   Default: NULL
 #'
 #' @return Tensor `n_nodes x out_features`. Transformed node features
 #'
@@ -64,41 +60,10 @@ gcn_conv_layer <- nn_module(
     self$normalize <- normalize
   },
 
-  forward = function(x, adj, edge_weight = NULL) {
+  forward = function(x, adj) {
     # Apply symmetric normalization if requested
     if (self$normalize) {
-      # Clone adjacency to avoid modifying input
-      adj <- adj$clone()
-
-      # If edge_weight not provided, extract from adjacency
-      # (supports both binary and pre-weighted adjacency matrices)
-      if (is.null(edge_weight)) {
-        edge_weight <- adj
-      } else {
-        # If edge_weight provided, multiply adjacency structure by weights
-        edge_weight <- adj * edge_weight
-      }
-
-      # Add self-loops: set diagonal to 1
-      edge_weight$fill_diagonal_(1)
-
-      # Compute degrees using edge weights (PyG formulation)
-      # d_hat_i = 1 + sum(e_{j,i}) for j in N(i)
-      # Since we already set diagonal to 1, this is just the row sum
-      deg <- torch_sum(edge_weight, dim = 2)
-
-      # D^(-1/2)
-      deg_inv_sqrt <- torch_pow(deg, -0.5)
-      deg_inv_sqrt[torch_isinf(deg_inv_sqrt)] <- 0
-
-      # Symmetric normalization: e_{j,i} / sqrt(d_hat_j * d_hat_i)
-      # Equivalent to: D^(-1/2) * edge_weight * D^(-1/2)
-      adj <- deg_inv_sqrt$view(c(-1, 1)) *
-        edge_weight *
-        deg_inv_sqrt$view(c(1, -1))
-    } else if (!is.null(edge_weight)) {
-      # No normalization but edge_weight provided: apply weights directly
-      adj <- adj * edge_weight
+      adj <- gcn_normalize(add_graph_self_loops(adj))$coalesce()
     }
 
     # Basic GCN: H = A_tilde X W
@@ -147,8 +112,6 @@ gcn_conv_layer <- nn_module(
 #' @param adj Tensor `n_nodes x n_nodes`. Adjacency matrix. Expected to be row-normalized
 #'   \eqn{D^{-1}A} where \eqn{D} is the degree matrix. Can be binary or weighted.
 #'   This layer does NOT perform normalization internally
-#' @param edge_weight Tensor `n_nodes x n_nodes` or NULL. Optional edge weights to
-#'   apply to the adjacency matrix. If NULL, uses values from \code{adj}. Default: NULL
 #'
 #' @return Tensor `n_nodes x out_features`. Transformed node features (before activation)
 #'
@@ -162,44 +125,39 @@ gcn_conv_layer <- nn_module(
 #' of the American Association of Geographers, 1–17.
 #' <doi:10.1080/24694452.2025.2558661>
 #' @export
-gcn_layer <- nn_module(
-  "GCNLayer",
+gcn_general_layer <- nn_module(
+  "GCNGeneralLayer",
 
-  initialize = function(in_features, out_features, bias = TRUE) {
-    # theta: neighbor aggregation weights
+  initialize = function(
+    in_features,
+    out_features,
+    bias = TRUE,
+    normalize = FALSE
+  ) {
     self$theta <- nn_linear(in_features, out_features, bias = FALSE)
-    # phi: self transformation weights
     self$phi <- nn_linear(in_features, out_features, bias = FALSE)
-
-    # psi: global bias term
     if (bias) {
       self$psi <- nn_parameter(torch_randn(1, out_features))
     } else {
       self$psi <- NULL
     }
+    self$normalize <- normalize
   },
 
-  forward = function(x, adj, edge_weight = NULL) {
-    # x: node features (n_nodes x in_features)
-    # adj: row-normalized adjacency (n_nodes x n_nodes)
-    # edge_weight: optional edge weights
-
-    # Apply edge weights if provided
-    if (!is.null(edge_weight)) {
-      adj <- adj * edge_weight
+  forward = function(x, adj) {
+    if (self$normalize) {
+      adj <- add_graph_self_loops(adj) |> adj_row_normalize()
     }
 
     neighbor_agg <- torch_mm(adj, x)
-    # Transform aggregated neighbors (theta)
     neighbor_trans <- self$theta(neighbor_agg)
-    # Transform self features (phi)
     self_trans <- self$phi(x)
 
-    # Combine: neighbor + self + bias
     out <- neighbor_trans + self_trans
     if (!is.null(self$psi)) {
       out <- out + self$psi
     }
+
     out
   }
 )

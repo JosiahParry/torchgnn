@@ -2,3 +2,8 @@
 ^docs$
 ^pkgdown$
 ^\.github$
+^examples$
+CLAUDE.md
+.gitignore
+GCN.qmd
+^misc$

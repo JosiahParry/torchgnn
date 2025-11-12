@@ -24,6 +24,7 @@
 adj_from_edgelist <- function(
   from,
   to,
+  weight = NULL,
   n = max(c(from, to)),
   symmetric = TRUE
 ) {
@@ -32,21 +33,26 @@ adj_from_edgelist <- function(
     j <- to
     from <- c(i, j)
     to <- c(j, i)
+    if (!is.null(weight)) {
+      weight <- c(weight, weight)
+    }
   }
 
-  # Build indices matrix: 2 x num_edges
+  # Default to weight 1 if not provided
+  if (is.null(weight)) {
+    weight <- rep(1, length(from))
+  }
+
   indices <- torch::torch_tensor(
     rbind(from, to),
     dtype = torch::torch_int64()
   )
 
-  # Create values vector: all 1.0s
-  values <- torch::torch_ones(
-    length(from),
+  values <- torch::torch_tensor(
+    weight,
     dtype = torch::torch_float32()
   )
 
-  # Create sparse COO tensor
   torch::torch_sparse_coo_tensor(
     indices,
     values,

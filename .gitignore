@@ -11,3 +11,6 @@ images/
 misc/
 GCN.qmd
 docs
+
+/.quarto/
+**/*.quarto_ipynb

@@ -13,20 +13,26 @@
 #' - Layer 2: 56 → 56 (activation)
 #' - Layer 3: 56 → out_features (output_activation)
 #'
+#' Uses `gcn_conv_layer` which automatically handles adding self-loops and symmetric
+#' normalization when `normalize = TRUE`.
+#'
 #' @param in_features Integer. Number of input features per node
 #' @param hidden_dims Integer vector. Dimensions of hidden layers (length = L)
 #' @param out_features Integer. Number of output features (typically 1 for regression)
 #' @param activation Function. Activation for hidden layers. Default: nnf_relu
 #' @param output_activation Function or NULL. Activation for output layer. Default: NULL
 #' @param dropout Numeric. Dropout rate (0-1) applied after each hidden layer. Default: 0
+#' @param normalize Logical. Whether to add self-loops and apply symmetric normalization.
+#'   Default: TRUE
 #'
 #' @section Forward pass:
 #' @param x Tensor `n_nodes x in_features`. Node feature matrix
-#' @param adj Tensor `n_nodes x n_nodes`. Adjacency matrix. Expected to be row-normalized
-#'   \eqn{D^{-1}A} where \eqn{D} is the degree matrix. Can be binary or weighted
+#' @param adj Tensor `n_nodes x n_nodes`. Binary adjacency matrix (0/1) defining graph structure.
+#'   When `normalize = TRUE`, self-loops are added and symmetric normalization is applied
+#'   automatically
 #' @param edge_weight Tensor `n_nodes x n_nodes` or NULL. Optional edge weights to
-#'   apply to the adjacency matrix. Passed through to all layers. If NULL, uses values
-#'   from \code{adj}. Default: NULL
+#'   apply to the adjacency structure. If NULL, treats all edges as having weight 1.
+#'   Passed through to all layers. Default: NULL
 #'
 #' @return Tensor `n_nodes x out_features`. Final predictions
 #'
@@ -52,57 +58,67 @@
 #'                    dropout = 0.5)
 #' }
 #' @export
-gcn_model <- nn_module(
-  "GCN",
+#' Multi-layer GCNConv Model (Kipf & Welling 2016)
+#'
+#' Stacks multiple Kipf/Welling GCNConv layers with optional activation and dropout.
+#' Self-loops are added and symmetric normalization is applied automatically.
+#' @export
+gcn_conv_model <- nn_module(
+  "GCNConvModel",
 
   initialize = function(
     in_features,
     hidden_dims,
     out_features,
     activation = nnf_relu,
-    output_activation = NULL,
-    dropout = 0
+    out_activation = NULL,
+    dropout = 0,
+    normalize = TRUE
   ) {
     layers <- list()
 
     # Input to first hidden layer
-    layers[[1]] <- gcn_layer(in_features, hidden_dims[1])
+    layers[[1]] <- gcn_conv_layer(
+      in_features,
+      hidden_dims[1],
+      normalize = normalize
+    )
 
     # Additional hidden layers
     if (length(hidden_dims) > 1) {
       for (i in 2:length(hidden_dims)) {
-        layers[[i]] <- gcn_layer(hidden_dims[i - 1], hidden_dims[i])
+        layers[[i]] <- gcn_conv_layer(
+          hidden_dims[i - 1],
+          hidden_dims[i],
+          normalize = normalize
+        )
       }
     }
 
     # Output layer
-    layers[[length(layers) + 1]] <- gcn_layer(
+    layers[[length(layers) + 1]] <- gcn_conv_layer(
       hidden_dims[length(hidden_dims)],
-      out_features
+      out_features,
+      normalize = normalize
     )
 
     self$layers <- nn_module_list(layers)
     self$activation <- activation
-    self$output_activation <- output_activation
+    self$out_activation <- out_activation
     self$dropout_rate <- dropout
   },
 
-  forward = function(x, adj, edge_weight = NULL) {
+  forward = function(x, adj) {
     for (i in seq_along(self$layers)) {
-      x <- self$layers[[i]](x, adj, edge_weight)
+      x <- self$layers[[i]](x, adj)
 
       if (i < length(self$layers)) {
-        # Hidden layer: apply activation + dropout
         x <- self$activation(x)
-
         if (self$training && self$dropout_rate > 0) {
           x <- nnf_dropout(x, p = self$dropout_rate)
         }
-      } else {
-        # Output layer: apply output activation if provided
-        if (!is.null(self$output_activation)) {
-          x <- self$output_activation(x)
-        }
+      } else if (!is.null(self$out_activation)) {
+        x <- self$out_activation(x)
       }
     }
     x
