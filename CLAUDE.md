@@ -9,6 +9,11 @@
 - Prefer UTF-8 math characters in written responses. Use latex and
   inline equations when editing documents.
 
+- Always use 1 based indexing.
+
+- `torch_mm()` works on sparse tensors. There are no *sparse* variants
+  of functions
+
 - Use latex equations and never utf-8 greek characters
 
 - All layers belong in a file named `R/layer-{name}.R` for example
