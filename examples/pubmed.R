@@ -1,11 +1,24 @@
-# data from https://linqs.org/datasets/#pubmed-diabetes
-library(dplyr)
 library(torch)
+library(torchgnn)
 library(nanoparquet)
 
+# read to tempfiles
+# data from https://linqs.org/datasets/#pubmed-diabetes
+nodes_tmp <- tempfile("nodes", fileext = ".parquet")
+edges_tmp <- tempfile("edges", fileext = ".parquet")
+
+download.file(
+  "https://github.com/JosiahParry/torchgnn/raw/refs/heads/main/examples/data/pubmed-diabetes/edges.parquet",
+  edges_tmp
+)
+download.file(
+  "https://github.com/JosiahParry/torchgnn/raw/refs/heads/main/examples/data/pubmed-diabetes/nodes.parquet",
+  nodes_tmp
+)
+
 # read in the nodes and edges
-nodes <- read_parquet("examples/data/pubmed-diabetes/nodes.parquet")
-edges <- read_parquet("examples/data/pubmed-diabetes/edges.parquet")
+nodes <- read_parquet(nodes_tmp)
+edges <- read_parquet(edges_tmp)
 
 # create our adjacency matrix from IDs
 adj <- adj_from_edgelist(edges$from, edges$to)
@@ -40,7 +53,7 @@ model <- gcn_conv_model(
 optimizer <- optim_adam(model$parameters, lr = 0.01)
 
 # set our number of epochs
-n_epochs <- 500
+n_epochs <- 200
 
 # create our training loop
 for (epoch in 1:n_epochs) {
@@ -62,7 +75,8 @@ for (epoch in 1:n_epochs) {
     )$mean()$item()
   })
 
-  if (epoch %% 10 == 0) {
+  # print info every 20 epochs
+  if (epoch %% 20 == 0) {
     cat(sprintf(
       "Epoch %d | Loss: %.4f | Val Acc: %.4f\n",
       epoch,
