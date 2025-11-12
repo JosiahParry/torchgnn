@@ -5,7 +5,7 @@ train-gcn.R
 train.R
 train-regiongcn.R
 misc
-data/
+/data/
 GCN_files/
 images/
 misc/
