@@ -13,9 +13,7 @@ pak::pak("josiahparry/torchgnn")
 
 ## Usage
 
-Use
-[`gcn_model()`](https://josiahparry.github.io/torchgnn/reference/gcn_model.md)
-to create a high level model:
+Use `gcn_model()` to create a high level model:
 
 ``` r
 library(torchgnn)
@@ -35,8 +33,7 @@ An `nn_module` containing 8,065 parameters.
 • layers: <nn_module_list> #8,065 parameters
 ```
 
-Or create individual layers using
-[`gcn_layer()`](https://josiahparry.github.io/torchgnn/reference/gcn_layer.md):
+Or create individual layers using `gcn_layer()`:
 
 ``` r
 gcn_layer(10, 1)

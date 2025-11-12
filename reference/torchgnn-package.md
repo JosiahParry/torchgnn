@@ -2,6 +2,12 @@
 
 What the package does (one paragraph).
 
+## See also
+
+Useful links:
+
+- <https://josiahparry.github.io/torchgnn/>
+
 ## Author
 
 **Maintainer**: Josiah Parry <josiah.parry@gmail.com>

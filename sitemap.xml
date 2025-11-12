@@ -3,11 +3,15 @@
 <url><loc>https://josiahparry.github.io/torchgnn/CLAUDE.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/authors.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/index.html</loc></url>
+<url><loc>https://josiahparry.github.io/torchgnn/reference/adj_from_edgelist.html</loc></url>
+<url><loc>https://josiahparry.github.io/torchgnn/reference/adjacency.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/gcn_conv_layer.html</loc></url>
-<url><loc>https://josiahparry.github.io/torchgnn/reference/gcn_layer.html</loc></url>
-<url><loc>https://josiahparry.github.io/torchgnn/reference/gcn_model.html</loc></url>
+<url><loc>https://josiahparry.github.io/torchgnn/reference/gcn_conv_model.html</loc></url>
+<url><loc>https://josiahparry.github.io/torchgnn/reference/gcn_general_layer.html</loc></url>
+<url><loc>https://josiahparry.github.io/torchgnn/reference/gcn_general_model.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/graph_split.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/index.html</loc></url>
+<url><loc>https://josiahparry.github.io/torchgnn/reference/nodes_to_tensor.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/regconv_layer.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/torchgnn-package.html</loc></url>
 </urlset>

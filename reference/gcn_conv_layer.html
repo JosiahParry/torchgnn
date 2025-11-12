@@ -73,13 +73,6 @@ on-the-fly. Default: TRUE</p></dd>
 Can be binary (0/1) or weighted. If <code>edge_weight</code> is provided, <code>adj</code>
 should be binary and weights will be applied from <code>edge_weight</code></p></dd>
 
-
-<dt id="arg-edge-weight">edge_weight<a class="anchor" aria-label="anchor" href="#arg-edge-weight"></a></dt>
-<dd><p>Tensor <code>n_nodes x n_nodes</code> or NULL. Optional edge weights.
-If NULL, uses values from <code>adj</code>. When <code>normalize = TRUE</code>, edge weights
-are used to compute degrees: \(\hat{d}_i = 1 + \sum_{j \in N(i)} e_{j,i}\).
-Default: NULL</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>

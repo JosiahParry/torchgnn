@@ -38,13 +38,6 @@ gcn_conv_layer(in_features, out_features, bias = TRUE, normalize = TRUE)
   Can be binary (0/1) or weighted. If `edge_weight` is provided, `adj`
   should be binary and weights will be applied from `edge_weight`
 
-- edge_weight:
-
-  Tensor `n_nodes x n_nodes` or NULL. Optional edge weights. If NULL,
-  uses values from `adj`. When `normalize = TRUE`, edge weights are used
-  to compute degrees: \\\hat{d}\_i = 1 + \sum\_{j \in N(i)} e\_{j,i}\\.
-  Default: NULL
-
 ## Value
 
 Tensor `n_nodes x out_features`. Transformed node features
