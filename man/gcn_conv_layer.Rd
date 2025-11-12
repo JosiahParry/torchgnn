@@ -21,11 +21,6 @@ on-the-fly. Default: TRUE}
 \item{adj}{Tensor \verb{n_nodes x n_nodes}. Adjacency matrix defining graph structure.
 Can be binary (0/1) or weighted. If \code{edge_weight} is provided, \code{adj}
 should be binary and weights will be applied from \code{edge_weight}}
-
-\item{edge_weight}{Tensor \verb{n_nodes x n_nodes} or NULL. Optional edge weights.
-If NULL, uses values from \code{adj}. When \code{normalize = TRUE}, edge weights
-are used to compute degrees: \eqn{\hat{d}_i = 1 + \sum_{j \in N(i)} e_{j,i}}.
-Default: NULL}
 }
 \value{
 Tensor \verb{n_nodes x out_features}. Transformed node features

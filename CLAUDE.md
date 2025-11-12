@@ -2,6 +2,7 @@
 - Using " - " is banned. Use commas or an em-dash without spaces on either side.
 - Prefer UTF-8 math characters in written responses. Use latex and inline equations when editing documents.
 
+- Don't add comments that say exactly what the line of code is doing.
 - Always use 1 based indexing.
 - When getting indices using `$indices()` always add `+ 1L` to get the 1 based index.
 - `torch_mm()` works on sparse tensors. There are no _sparse_ variants of functions
