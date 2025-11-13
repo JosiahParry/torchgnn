@@ -44,8 +44,270 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9">
-What the package does (one paragraph).
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header"><h1 id="torchgnn">torchgnn<a class="anchor" aria-label="anchor" href="#torchgnn"></a>
+</h1></div>
+<p>Graph Neural Networks for <a href="https://mlverse.github.io/torch/" class="external-link"><code>{torch}</code></a> in R.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>Install the development version:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"josiahparry/torchgnn"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
+</h2>
+<p>The following layers are implemented</p>
+<ul>
+<li>
+<code><a href="reference/gcn_conv_layer.html">gcn_conv_layer()</a></code>: Standard GCN layer (Kipf &amp; Welling, 2016)</li>
+<li>
+<code><a href="reference/gcn_general_layer.html">gcn_general_layer()</a></code>: Generalized GCN layer (Hamilton, 2020)</li>
+<li>
+<code><a href="reference/sage_layer.html">sage_layer()</a></code>: GraphSAGE layer (Hamilton, Ying, and Leskovec, 2017)</li>
+<li>
+<code><a href="reference/regconv_layer.html">regconv_layer()</a></code>: RegionConv layer for regionalized GCN (Guo et al. 2025)</li>
+</ul>
+<div class="section level3">
+<h3 id="models">Models<a class="anchor" aria-label="anchor" href="#models"></a>
+</h3>
+<p><a href="https://josiahparry.github.io/torchgnn/">torchgnn</a> provides <code><a href="reference/gcn_conv_model.html">gcn_conv_model()</a></code> and <code><a href="reference/gcn_general_model.html">gcn_general_model()</a></code> utilities to create GCN models with multiple layers.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://josiahparry.github.io/torchgnn/">torchgnn</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/gcn_general_model.html">gcn_general_model</a></span><span class="op">(</span></span>
+<span>  in_features <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  hidden_dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">32</span>, <span class="fl">16</span><span class="op">)</span>,</span>
+<span>  out_features <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>An <span class="st">`</span><span class="at">nn_module</span><span class="st">`</span> containing <span class="dv">4</span>,<span class="dv">305</span> parameters.</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>── Modules ─────────────────────────────────────────────────────────────────────</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>• layers<span class="sc">:</span> <span class="er">&lt;</span>nn_module_list<span class="sc">&gt;</span> <span class="co">#4,305 parameters</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="aggregators">Aggregators<a class="anchor" aria-label="anchor" href="#aggregators"></a>
+</h3>
+<p>An S7 class <code><a href="reference/aggregator.html">torchgnn::Aggregator</a></code> is created with a generic method with signature <code>forward(x, adj, tensor)</code>. Only basic aggregators are implemented at present.</p>
+<ul>
+<li>
+<code><a href="reference/aggregator.html">SumAggregator()</a></code>: Sum of neighbor features</li>
+<li>
+<code><a href="reference/aggregator.html">MeanAggregator()</a></code>: Mean of neighbor features (with row normalization)</li>
+<li>
+<code><a href="reference/aggregator.html">MaxAggregator()</a></code>: Element-wise maximum of neighbor features</li>
+<li>
+<code><a href="reference/aggregator.html">MinAggregator()</a></code>: Element-wise minimum of neighbor features</li>
+<li>
+<code><a href="reference/aggregator.html">ProductAggregator()</a></code>: Element-wise product of neighbor features</li>
+<li>
+<code><a href="reference/aggregator.html">VarAggregator()</a></code>: Variance of neighbor features</li>
+<li>
+<code><a href="reference/aggregator.html">StdAggregator()</a></code>: Standard deviation of neighbor features</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/aggregator.html">MeanAggregator</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="sc">&lt;</span>torchgnn<span class="sc">::</span>MeanAggregator<span class="sc">&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a> <span class="er">@</span> name     <span class="sc">:</span> chr <span class="st">"mean"</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a> <span class="sc">@</span> learnable<span class="sc">:</span> logi <span class="cn">FALSE</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="data-preparation">Data Preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
+</h3>
+<p><a href="https://josiahparry.github.io/torchgnn/">torchgnn</a> works with sparse COO torch tensors for adjacency and expects dense feature tensors. Note that weighted is handled by incorporating it directly into the adjacency matrix.</p>
+<p><code>adj_from_edgelist(from, to, weight)</code>: Create sparse adjacency matrix from edge list (supports character IDs, too)</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">i</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep.int</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">j</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">50</span>, <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">adj</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/adj_from_edgelist.html">adj_from_edgelist</a></span><span class="op">(</span><span class="va">i</span>, <span class="va">j</span><span class="op">)</span></span>
+<span><span class="va">adj</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>torch_tensor</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>[ SparseCPUFloatType{}</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>indices<span class="sc">:</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>Columns <span class="dv">1</span> to <span class="dv">26</span> <span class="dv">0</span>  <span class="dv">0</span>  <span class="dv">0</span>  <span class="dv">0</span>  <span class="dv">0</span>  <span class="dv">0</span>  <span class="dv">1</span>  <span class="dv">1</span>  <span class="dv">1</span>  <span class="dv">1</span>  <span class="dv">1</span>  <span class="dv">2</span>  <span class="dv">2</span>  <span class="dv">2</span>  <span class="dv">2</span>  <span class="dv">2</span>  <span class="dv">3</span>  <span class="dv">3</span>  <span class="dv">3</span>  <span class="dv">3</span>  <span class="dv">3</span>  <span class="dv">4</span>  <span class="dv">4</span>  <span class="dv">4</span>  <span class="dv">4</span>  <span class="dv">4</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a> <span class="dv">0</span>  <span class="dv">1</span>  <span class="dv">3</span>  <span class="dv">5</span>  <span class="dv">6</span>  <span class="dv">8</span>  <span class="dv">0</span>  <span class="dv">1</span>  <span class="dv">2</span>  <span class="dv">4</span>  <span class="dv">6</span>  <span class="dv">1</span>  <span class="dv">4</span>  <span class="dv">5</span>  <span class="dv">6</span>  <span class="dv">9</span>  <span class="dv">0</span>  <span class="dv">4</span>  <span class="dv">5</span>  <span class="dv">6</span>  <span class="dv">8</span>  <span class="dv">1</span>  <span class="dv">2</span>  <span class="dv">3</span>  <span class="dv">4</span>  <span class="dv">8</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>Columns <span class="dv">27</span> to <span class="dv">52</span> <span class="dv">4</span>  <span class="dv">5</span>  <span class="dv">5</span>  <span class="dv">5</span>  <span class="dv">5</span>  <span class="dv">5</span>  <span class="dv">5</span>  <span class="dv">5</span>  <span class="dv">5</span>  <span class="dv">6</span>  <span class="dv">6</span>  <span class="dv">6</span>  <span class="dv">6</span>  <span class="dv">6</span>  <span class="dv">6</span>  <span class="dv">6</span>  <span class="dv">6</span>  <span class="dv">7</span>  <span class="dv">7</span>  <span class="dv">7</span>  <span class="dv">7</span>  <span class="dv">7</span>  <span class="dv">8</span>  <span class="dv">8</span>  <span class="dv">8</span>  <span class="dv">8</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a> <span class="dv">9</span>  <span class="dv">0</span>  <span class="dv">2</span>  <span class="dv">3</span>  <span class="dv">5</span>  <span class="dv">6</span>  <span class="dv">7</span>  <span class="dv">8</span>  <span class="dv">9</span>  <span class="dv">0</span>  <span class="dv">1</span>  <span class="dv">2</span>  <span class="dv">3</span>  <span class="dv">5</span>  <span class="dv">7</span>  <span class="dv">8</span>  <span class="dv">9</span>  <span class="dv">5</span>  <span class="dv">6</span>  <span class="dv">7</span>  <span class="dv">8</span>  <span class="dv">9</span>  <span class="dv">0</span>  <span class="dv">3</span>  <span class="dv">4</span>  <span class="dv">5</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>Columns <span class="dv">53</span> to <span class="dv">63</span> <span class="dv">8</span>  <span class="dv">8</span>  <span class="dv">8</span>  <span class="dv">8</span>  <span class="dv">9</span>  <span class="dv">9</span>  <span class="dv">9</span>  <span class="dv">9</span>  <span class="dv">9</span>  <span class="dv">9</span>  <span class="dv">9</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a> <span class="dv">6</span>  <span class="dv">7</span>  <span class="dv">8</span>  <span class="dv">9</span>  <span class="dv">2</span>  <span class="dv">4</span>  <span class="dv">5</span>  <span class="dv">6</span>  <span class="dv">7</span>  <span class="dv">8</span>  <span class="dv">9</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>[ CPULongType{<span class="dv">2</span>,<span class="dv">63</span>} ]</span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>values<span class="sc">:</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a> <span class="dv">2</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a> <span class="dv">2</span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a> <span class="dv">1</span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a> <span class="dv">1</span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a> <span class="dv">1</span></span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a> <span class="dv">1</span></span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a> <span class="dv">2</span></span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a> <span class="dv">2</span></span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a> <span class="dv">1</span></span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a> <span class="dv">2</span></span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a> <span class="dv">1</span></span>
+<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a> <span class="dv">1</span></span>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a> <span class="dv">1</span></span>
+<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a> <span class="dv">2</span></span>
+<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a> <span class="dv">1</span></span>
+<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a> <span class="dv">3</span></span>
+<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a> <span class="dv">1</span></span>
+<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a> <span class="dv">2</span></span>
+<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a>... [the output was <span class="fu">truncated</span> (use <span class="at">n=</span><span class="sc">-</span><span class="dv">1</span> to disable)]</span>
+<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a>]</span></code></pre></div>
+<p><code>nodes_to_tensor(nodes, adj, node_id)</code> will convert node features from a dataframe to a tensor with correct ordering.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">train_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span> <span class="op">*</span> <span class="fl">5</span>, max <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/nodes_to_tensor.html">nodes_to_tensor</a></span><span class="op">(</span><span class="va">train_data</span>, <span class="va">adj</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>torch_tensor</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a> <span class="fl">13.0174</span>   <span class="fl">9.5270</span>  <span class="fl">15.1417</span>  <span class="fl">15.5783</span>  <span class="fl">12.6699</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="fl">5.1603</span>  <span class="fl">17.8440</span>   <span class="fl">4.0538</span>  <span class="fl">15.9462</span>   <span class="fl">4.2642</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="fl">9.5709</span>  <span class="fl">17.2868</span>  <span class="fl">14.2224</span>   <span class="fl">9.1055</span>   <span class="fl">2.5874</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a> <span class="fl">15.3262</span>   <span class="fl">7.7998</span>   <span class="fl">2.4338</span>   <span class="fl">8.2017</span>   <span class="fl">9.5624</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>  <span class="fl">1.6849</span>  <span class="fl">15.5464</span>   <span class="fl">4.9098</span>  <span class="fl">16.2174</span>  <span class="fl">18.4815</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a> <span class="fl">17.5064</span>  <span class="fl">19.2124</span>   <span class="fl">2.8661</span>  <span class="fl">12.0987</span>  <span class="fl">11.9752</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>  <span class="fl">6.7815</span>   <span class="fl">8.6932</span>   <span class="fl">4.7926</span>  <span class="fl">13.0945</span>  <span class="fl">19.5234</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a> <span class="fl">16.7888</span>  <span class="fl">14.2503</span>   <span class="fl">1.1787</span>   <span class="fl">7.0639</span>  <span class="fl">14.6358</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>  <span class="fl">6.9337</span>   <span class="fl">7.9999</span>  <span class="fl">12.8458</span>   <span class="fl">5.4052</span>   <span class="fl">7.1345</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>  <span class="fl">6.6755</span>   <span class="fl">6.5070</span>  <span class="fl">17.5254</span>  <span class="fl">19.8537</span>   <span class="fl">8.6295</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>[ CPUFloatType{<span class="dv">10</span>,<span class="dv">5</span>} ]</span></code></pre></div>
+<p>The function <code><a href="reference/graph_split.html">graph_split()</a></code> create split <strong>masks</strong>. This API will likely change as how to integrate large graphs into <a href="https://torch.mlverse.org/docs" class="external-link">torch</a> and <a href="https://mlverse.github.io/luz/" class="external-link">luz</a> is figured out.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/graph_split.html">graph_split</a></span><span class="op">(</span><span class="va">adj</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="sc">&lt;</span>graph_split<span class="sc">&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>named list [<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>] </span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="sc">$</span> data    <span class="sc">:</span>Float [<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="sc">$</span> train_id<span class="sc">:</span> int [<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>] <span class="dv">2</span> <span class="dv">7</span> <span class="dv">4</span> <span class="dv">3</span> <span class="dv">5</span> <span class="dv">10</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="sc">$</span> val_id  <span class="sc">:</span> int [<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="dv">6</span> <span class="dv">1</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="sc">$</span> test_id <span class="sc">:</span> int [<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="dv">9</span> <span class="dv">8</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="sc">@</span> prop<span class="sc">:</span> num [<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] <span class="fl">0.6</span> <span class="fl">0.2</span> <span class="fl">0.2</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
+<p>Train a GCN on the PubMed Diabetes citation network for document classification.</p>
+<p>This example creates a GCN model</p>
+<details class="code-fold"><summary>
+data preparation
+</summary><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://torch.mlverse.org/docs" class="external-link">torch</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://josiahparry.github.io/torchgnn/">torchgnn</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/nanoparquet" class="external-link">nanoparquet</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># read to tempfiles</span></span>
+<span><span class="co"># data from https://linqs.org/datasets/#pubmed-diabetes</span></span>
+<span><span class="va">nodes_tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"nodes"</span>, fileext <span class="op">=</span> <span class="st">".parquet"</span><span class="op">)</span></span>
+<span><span class="va">edges_tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"edges"</span>, fileext <span class="op">=</span> <span class="st">".parquet"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span></span>
+<span>  <span class="st">"https://github.com/JosiahParry/torchgnn/raw/refs/heads/main/examples/data/pubmed-diabetes/edges.parquet"</span>,</span>
+<span>  <span class="va">edges_tmp</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span></span>
+<span>  <span class="st">"https://github.com/JosiahParry/torchgnn/raw/refs/heads/main/examples/data/pubmed-diabetes/nodes.parquet"</span>,</span>
+<span>  <span class="va">nodes_tmp</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># read in the nodes and edges</span></span>
+<span><span class="va">nodes</span> <span class="op">&lt;-</span> <span class="fu">read_parquet</span><span class="op">(</span><span class="va">nodes_tmp</span><span class="op">)</span></span>
+<span><span class="va">edges</span> <span class="op">&lt;-</span> <span class="fu">read_parquet</span><span class="op">(</span><span class="va">edges_tmp</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># create our adjacency matrix from IDs</span></span>
+<span><span class="va">adj</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/adj_from_edgelist.html">adj_from_edgelist</a></span><span class="op">(</span><span class="va">edges</span><span class="op">$</span><span class="va">from</span>, <span class="va">edges</span><span class="op">$</span><span class="va">to</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># create our training data tensor</span></span>
+<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/nodes_to_tensor.html">nodes_to_tensor</a></span><span class="op">(</span></span>
+<span>  <span class="fu">select</span><span class="op">(</span><span class="va">nodes</span>, <span class="op">-</span><span class="va">label</span><span class="op">)</span>,</span>
+<span>  <span class="va">adj</span>,</span>
+<span>  node_id <span class="op">=</span> <span class="st">"paper_id"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># create our target class tensor</span></span>
+<span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/nodes_to_tensor.html">nodes_to_tensor</a></span><span class="op">(</span><span class="fu">select</span><span class="op">(</span><span class="va">nodes</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>, <span class="va">adj</span>, <span class="st">"paper_id"</span><span class="op">)</span><span class="op">$</span><span class="fu">to</span><span class="op">(</span></span>
+<span>  dtype <span class="op">=</span> <span class="fu"><a href="https://torch.mlverse.org/docs/reference/torch_dtype.html" class="external-link">torch_long</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span><span class="op">$</span><span class="fu">squeeze</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># perform a train, test, validation split</span></span>
+<span><span class="va">split</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/graph_split.html">graph_split</a></span><span class="op">(</span><span class="va">X</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span></code></pre></div>
+</details><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># define a 2 layer GCN model</span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gcn_conv_model.html">gcn_conv_model</a></span><span class="op">(</span></span>
+<span>  <span class="co"># number of variables</span></span>
+<span>  in_features <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  <span class="co"># define our hidden layers</span></span>
+<span>  hidden_dims <span class="op">=</span> <span class="fl">16</span>,</span>
+<span>  <span class="co"># predicting 3 labels</span></span>
+<span>  out_features <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  dropout <span class="op">=</span> <span class="fl">0.5</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">model</span> </span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>An <span class="st">`</span><span class="at">nn_module</span><span class="st">`</span> containing <span class="dv">8</span>,<span class="dv">067</span> parameters.</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>── Modules ─────────────────────────────────────────────────────────────────────</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>• layers<span class="sc">:</span> <span class="er">&lt;</span>nn_module_list<span class="sc">&gt;</span> <span class="co">#8,067 parameters</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># use ADAM optimizer</span></span>
+<span><span class="va">optimizer</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://torch.mlverse.org/docs/reference/optim_adam.html" class="external-link">optim_adam</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">parameters</span>, lr <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># set our number of epochs</span></span>
+<span><span class="va">n_epochs</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
+<span></span>
+<span><span class="co"># create our training loop</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">epoch</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">n_epochs</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">model</span><span class="op">$</span><span class="fu">train</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">optimizer</span><span class="op">$</span><span class="fu">zero_grad</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">model</span><span class="op">(</span><span class="va">X</span>, <span class="va">adj</span><span class="op">)</span></span>
+<span>  <span class="va">loss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://torch.mlverse.org/docs/reference/nnf_cross_entropy.html" class="external-link">nnf_cross_entropy</a></span><span class="op">(</span><span class="va">out</span><span class="op">[</span><span class="va">split</span><span class="op">$</span><span class="va">train_id</span>, <span class="op">]</span>, <span class="va">Y</span><span class="op">[</span><span class="va">split</span><span class="op">$</span><span class="va">train_id</span><span class="op">]</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">loss</span><span class="op">$</span><span class="fu">backward</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">optimizer</span><span class="op">$</span><span class="fu">step</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">model</span><span class="op">$</span><span class="fu">eval</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://torch.mlverse.org/docs/reference/with_no_grad.html" class="external-link">with_no_grad</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>    <span class="va">val_out</span> <span class="op">&lt;-</span> <span class="fu">model</span><span class="op">(</span><span class="va">X</span>, <span class="va">adj</span><span class="op">)</span></span>
+<span>    <span class="va">val_pred</span> <span class="op">&lt;-</span> <span class="va">val_out</span><span class="op">[</span><span class="va">split</span><span class="op">$</span><span class="va">val_id</span>, <span class="op">]</span><span class="op">$</span><span class="fu">argmax</span><span class="op">(</span>dim <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>    <span class="va">val_acc</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">val_pred</span> <span class="op">==</span> <span class="va">Y</span><span class="op">[</span><span class="va">split</span><span class="op">$</span><span class="va">val_id</span><span class="op">]</span><span class="op">)</span><span class="op">$</span><span class="fu">to</span><span class="op">(</span></span>
+<span>      dtype <span class="op">=</span> <span class="fu"><a href="https://torch.mlverse.org/docs/reference/torch_dtype.html" class="external-link">torch_float</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="op">)</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">item</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># print info every 20 epochs</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">epoch</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html" class="external-link">%%</a></span> <span class="fl">20</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span></span>
+<span>      <span class="st">"Epoch %d | Loss: %.4f | Val Acc: %.4f\n"</span>,</span>
+<span>      <span class="va">epoch</span>,</span>
+<span>      <span class="va">loss</span><span class="op">$</span><span class="fu">item</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>      <span class="va">val_acc</span></span>
+<span>    <span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>Epoch <span class="dv">20</span> <span class="sc">|</span> Loss<span class="sc">:</span> <span class="fl">0.8120</span> <span class="sc">|</span> Val Acc<span class="sc">:</span> <span class="fl">0.7984</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>Epoch <span class="dv">40</span> <span class="sc">|</span> Loss<span class="sc">:</span> <span class="fl">0.5614</span> <span class="sc">|</span> Val Acc<span class="sc">:</span> <span class="fl">0.8377</span></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>Epoch <span class="dv">60</span> <span class="sc">|</span> Loss<span class="sc">:</span> <span class="fl">0.4601</span> <span class="sc">|</span> Val Acc<span class="sc">:</span> <span class="fl">0.8570</span></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>Epoch <span class="dv">80</span> <span class="sc">|</span> Loss<span class="sc">:</span> <span class="fl">0.4188</span> <span class="sc">|</span> Val Acc<span class="sc">:</span> <span class="fl">0.8630</span></span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>Epoch <span class="dv">100</span> <span class="sc">|</span> Loss<span class="sc">:</span> <span class="fl">0.3978</span> <span class="sc">|</span> Val Acc<span class="sc">:</span> <span class="fl">0.8656</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">model</span><span class="op">$</span><span class="fu">eval</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://torch.mlverse.org/docs/reference/with_no_grad.html" class="external-link">with_no_grad</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">test_out</span> <span class="op">&lt;-</span> <span class="fu">model</span><span class="op">(</span><span class="va">X</span>, <span class="va">adj</span><span class="op">)</span></span>
+<span>  <span class="va">test_pred</span> <span class="op">&lt;-</span> <span class="va">test_out</span><span class="op">[</span><span class="va">split</span><span class="op">$</span><span class="va">test_id</span>, <span class="op">]</span><span class="op">$</span><span class="fu">argmax</span><span class="op">(</span>dim <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>  <span class="va">test_acc</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">test_pred</span> <span class="op">==</span> <span class="va">Y</span><span class="op">[</span><span class="va">split</span><span class="op">$</span><span class="va">test_id</span><span class="op">]</span><span class="op">)</span><span class="op">$</span><span class="fu">to</span><span class="op">(</span></span>
+<span>    dtype <span class="op">=</span> <span class="fu"><a href="https://torch.mlverse.org/docs/reference/torch_dtype.html" class="external-link">torch_float</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">)</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">item</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"Test Accuracy: %.4f\n"</span>, <span class="va">test_acc</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>Test Accuracy<span class="sc">:</span> <span class="fl">0.8608</span></span></code></pre></div>
+</div>
+</div>
   </main><aside class="col-md-3"><div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
