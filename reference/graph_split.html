@@ -94,7 +94,7 @@ each row belongs to exactly one split.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Use in training</span></span></span>
 <span class="r-in"><span><span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu">model</span><span class="op">(</span><span class="va">X</span>, <span class="va">A_sparse</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">train_loss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://torch.mlverse.org/docs/reference/nnf_mse_loss.html" class="external-link">nnf_mse_loss</a></span><span class="op">(</span><span class="va">predictions</span><span class="op">[</span><span class="va">split</span><span class="op">$</span><span class="va">train_id</span><span class="op">]</span>, <span class="va">y</span><span class="op">[</span><span class="va">split</span><span class="op">$</span><span class="va">train_id</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">train_loss</span> <span class="op">&lt;-</span> <span class="fu">nnf_mse_loss</span><span class="op">(</span><span class="va">predictions</span><span class="op">[</span><span class="va">split</span><span class="op">$</span><span class="va">train_id</span><span class="op">]</span>, <span class="va">y</span><span class="op">[</span><span class="va">split</span><span class="op">$</span><span class="va">train_id</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

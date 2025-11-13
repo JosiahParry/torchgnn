@@ -8,6 +8,17 @@
   [`adj_row_normalize()`](https://josiahparry.github.io/torchgnn/reference/adjacency.md)
   [`add_graph_self_loops()`](https://josiahparry.github.io/torchgnn/reference/adjacency.md)
   : Add self-loops to a graph
+- [`Aggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
+  [`SumAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
+  [`MeanAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
+  [`MaxAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
+  [`MinAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
+  [`ProductAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
+  [`VarAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
+  [`StdAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
+  [`LSTMAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
+  [`SoftmaxAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
+  : Message Passing Aggregators
 - [`gcn_conv_layer()`](https://josiahparry.github.io/torchgnn/reference/gcn_conv_layer.md)
   : GCN Convolutional Layer (Kipf & Welling 2016)
 - [`gcn_conv_model()`](https://josiahparry.github.io/torchgnn/reference/gcn_conv_model.md)
@@ -22,3 +33,5 @@
   : Convert Node Features to Tensor
 - [`regconv_layer()`](https://josiahparry.github.io/torchgnn/reference/regconv_layer.md)
   : Regional GCN Convolutional Layer (Guo et al. 2025)
+- [`sage_layer()`](https://josiahparry.github.io/torchgnn/reference/sage_layer.md)
+  : GraphSAGE Layer (Hamilton et al. 2017)
