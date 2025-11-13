@@ -5,9 +5,6 @@ format: gfm
 
 Graph Neural Networks for [`{torch}`](https://mlverse.github.io/torch/) in R.
 
-**Currently supports:** Graph Convolutional Networks (GCN) as described
-in Kipf & Welling (2017) and the Generalized GCN as described by Hamilton (2020).
-
 ## Installation
 
 Install the development version:
@@ -16,64 +13,95 @@ Install the development version:
 pak::pak("josiahparry/torchgnn")
 ```
 
-## Key Functions
+## Features
 
-### Model Building
+The following layers are implemented
 
-- `gcn_conv_model()`: High-level GCN model with multiple layers
-- `gcn_general_model()`: Generalized GCN with multiple layers
-- `gcn_conv_layer()`: Standard GCN layer
-- `gcn_general_layer()`: Generlized GCN layer from Hamilton 2020
+- `gcn_conv_layer()`: Standard GCN layer (Kipf & Welling, 2016)
+- `gcn_general_layer()`: Generalized GCN layer (Hamilton, 2020)
+- `sage_layer()`: GraphSAGE layer (Hamilton, Ying, and Leskovec, 2017)
+- `regconv_layer()`: RegionConv layer for regionalized GCN (Guo et al. 2025)
+
+
+
+### Models
+
+`{torchgnn}` provides `gcn_conv_model()` and `gcn_general_model()` utilities to create GCN models with multiple layers. 
+
+```{r}
+library(torchgnn)
+
+gcn_general_model(
+  in_features = 50,
+  hidden_dims = c(32, 16),
+  out_features = 1
+)
+```
+
+
+### Aggregators 
+
+An S7 class `torchgnn::Aggregator` is created with a generic method with signature `forward(x, adj, tensor)`. Only basic aggregators are implemented at present.
+
+- `SumAggregator()`: Sum of neighbor features
+- `MeanAggregator()`: Mean of neighbor features (with row normalization)
+- `MaxAggregator()`: Element-wise maximum of neighbor features
+- `MinAggregator()`: Element-wise minimum of neighbor features
+- `ProductAggregator()`: Element-wise product of neighbor features
+- `VarAggregator()`: Variance of neighbor features
+- `StdAggregator()`: Standard deviation of neighbor features
+
+```{r}
+MeanAggregator()
+```
 
 ### Data Preparation
 
-- `adj_from_edgelist(from, to)`: Create sparse adjacency matrix from edge list (supports character IDs)
-- `nodes_to_tensor(nodes, adj, node_id)`: Convert node features dataframe to tensor with correct ordering
-- `graph_split(X, seed)`: Create train/validation/test splits
+`{torchgnn}` works with sparse COO torch tensors for adjacency and expects dense feature tensors. Note that weighted is handled by incorporating it directly into the adjacency matrix.
 
-## Usage
+`adj_from_edgelist(from, to, weight)`: Create sparse adjacency matrix from edge list (supports character IDs, too)
 
-### Creating Models
 
-```{r, eval = FALSE}
-library(torchgnn)
+```{r}
+set.seed(0)
+i <- sort(rep.int(1:10, 5))
+j <- sample(1:10, 50, TRUE)
 
-# Multi-layer GCN
-model <- gcn_conv_model(
-  in_features = 500,
-  hidden_dims = c(32, 16),
-  out_features = 3,
-  dropout = 0.5
-)
-
-# Single layer
-layer <- gcn_layer(500, 32)
+adj <- adj_from_edgelist(i, j)
+adj
 ```
 
-### Working with Graph Data
+`nodes_to_tensor(nodes, adj, node_id)` will convert node features from a dataframe to a tensor with correct ordering.
 
-The package provides helpers for converting graph data to tensors:
+```{r}
+train_data <- as.data.frame(
+  matrix(runif(10 * 5, max = 20), nrow = 10)
+)
 
-```{r, eval = FALSE}
-# Create adjacency matrix (handles character node IDs)
-adj <- adj_from_edgelist(edges$from, edges$to)
+nodes_to_tensor(train_data, adj)
+```
 
-# Convert node features (automatically orders by adjacency matrix)
-X <- nodes_to_tensor(node_features, adj, node_id = "node_id_column")
+The function `graph_split()` create split **masks**. This API will likely change as how to integrate large graphs into `{torch}` and `{luz}` is figured out. 
+
+```{r}
+graph_split(adj)
 ```
 
 
 ## Example
 
-This is taken from the examples directory. 
 
-Train a GCN on the PubMed Diabetes citation network for document classification:
+Train a GCN on the PubMed Diabetes citation network for document classification.
 
-```{r}
+This example creates a GCN model 
+
+```{r message=FALSE}
+#| code-fold: true
+#| code-summary: data preparation
 library(torch)
-library(dplyr)
 library(torchgnn)
 library(nanoparquet)
+library(dplyr)
 
 # read to tempfiles
 # data from https://linqs.org/datasets/#pubmed-diabetes
@@ -110,7 +138,9 @@ Y <- nodes_to_tensor(select(nodes, 1:2), adj, "paper_id")$to(
 
 # perform a train, test, validation split
 split <- graph_split(X, seed = 42)
+```
 
+```{r}
 # define a 2 layer GCN model
 model <- gcn_conv_model(
   # number of variables
@@ -127,7 +157,7 @@ model
 optimizer <- optim_adam(model$parameters, lr = 0.01)
 
 # set our number of epochs
-n_epochs <- 200
+n_epochs <- 100
 
 # create our training loop
 for (epoch in 1:n_epochs) {

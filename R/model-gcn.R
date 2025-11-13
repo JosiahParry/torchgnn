@@ -58,11 +58,6 @@
 #'                    dropout = 0.5)
 #' }
 #' @export
-#' Multi-layer GCNConv Model (Kipf & Welling 2016)
-#'
-#' Stacks multiple Kipf/Welling GCNConv layers with optional activation and dropout.
-#' Self-loops are added and symmetric normalization is applied automatically.
-#' @export
 gcn_conv_model <- nn_module(
   "GCNConvModel",
 
