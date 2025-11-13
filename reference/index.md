@@ -35,3 +35,5 @@
   : Regional GCN Convolutional Layer (Guo et al. 2025)
 - [`sage_layer()`](https://josiahparry.github.io/torchgnn/reference/sage_layer.md)
   : GraphSAGE Layer (Hamilton et al. 2017)
+- [`sage_model()`](https://josiahparry.github.io/torchgnn/reference/sage_model.md)
+  : Multi-layer GraphSAGE Model (Hamilton et al. 2017)
