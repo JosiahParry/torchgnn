@@ -6,12 +6,14 @@
 <url><loc>https://josiahparry.github.io/torchgnn/reference/adj_from_edgelist.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/adjacency.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/aggregator.html</loc></url>
+<url><loc>https://josiahparry.github.io/torchgnn/reference/gat_layer.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/gcn_conv_layer.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/gcn_conv_model.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/gcn_general_layer.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/gcn_general_model.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/graph_split.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/index.html</loc></url>
+<url><loc>https://josiahparry.github.io/torchgnn/reference/model_gat.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/nodes_to_tensor.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/regconv_layer.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/sage_layer.html</loc></url>

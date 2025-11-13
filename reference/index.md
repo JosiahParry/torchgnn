@@ -19,6 +19,8 @@
   [`LSTMAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
   [`SoftmaxAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
   : Message Passing Aggregators
+- [`gat_layer()`](https://josiahparry.github.io/torchgnn/reference/gat_layer.md)
+  : Graph Attention Network Layer (Veličković et al. 2018)
 - [`gcn_conv_layer()`](https://josiahparry.github.io/torchgnn/reference/gcn_conv_layer.md)
   : GCN Convolutional Layer (Kipf & Welling 2016)
 - [`gcn_conv_model()`](https://josiahparry.github.io/torchgnn/reference/gcn_conv_model.md)
@@ -29,6 +31,8 @@
   : Multi-layer Generalized GCN Model (Hamilton 2020)
 - [`graph_split()`](https://josiahparry.github.io/torchgnn/reference/graph_split.md)
   : Create Train/Validation/Test Split for Graph Data
+- [`model_gat()`](https://josiahparry.github.io/torchgnn/reference/model_gat.md)
+  : Multi-layer Graph Attention Network Model (Veličković et al. 2018)
 - [`nodes_to_tensor()`](https://josiahparry.github.io/torchgnn/reference/nodes_to_tensor.md)
   : Convert Node Features to Tensor
 - [`regconv_layer()`](https://josiahparry.github.io/torchgnn/reference/regconv_layer.md)

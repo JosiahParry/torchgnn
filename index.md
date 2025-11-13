@@ -26,11 +26,12 @@ The following layers are implemented
 
 ### Models
 
-[torchgnn](https://josiahparry.github.io/torchgnn/) provides
-[`gcn_conv_model()`](https://josiahparry.github.io/torchgnn/reference/gcn_conv_model.md)
-and
-[`gcn_general_model()`](https://josiahparry.github.io/torchgnn/reference/gcn_general_model.md)
-utilities to create GCN models with multiple layers.
+[torchgnn](https://josiahparry.github.io/torchgnn/) provides utilities
+to create GNN models with multiple layers.
+
+- [`gcn_conv_model()`](https://josiahparry.github.io/torchgnn/reference/gcn_conv_model.md)
+- [`gcn_general_model()`](https://josiahparry.github.io/torchgnn/reference/gcn_general_model.md)
+- `model_sage()`
 
 ``` r
 library(torchgnn)
@@ -296,11 +297,11 @@ for (epoch in 1:n_epochs) {
 ```
 
 ``` R
-Epoch 20 | Loss: 0.8120 | Val Acc: 0.7984
-Epoch 40 | Loss: 0.5614 | Val Acc: 0.8377
-Epoch 60 | Loss: 0.4601 | Val Acc: 0.8570
-Epoch 80 | Loss: 0.4188 | Val Acc: 0.8630
-Epoch 100 | Loss: 0.3978 | Val Acc: 0.8656
+Epoch 20 | Loss: 0.8129 | Val Acc: 0.8022
+Epoch 40 | Loss: 0.5767 | Val Acc: 0.8349
+Epoch 60 | Loss: 0.4758 | Val Acc: 0.8463
+Epoch 80 | Loss: 0.4317 | Val Acc: 0.8590
+Epoch 100 | Loss: 0.4001 | Val Acc: 0.8618
 ```
 
 ``` r
@@ -317,5 +318,5 @@ cat(sprintf("Test Accuracy: %.4f\n", test_acc))
 ```
 
 ``` R
-Test Accuracy: 0.8608
+Test Accuracy: 0.8570
 ```
