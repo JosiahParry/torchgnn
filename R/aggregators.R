@@ -346,18 +346,6 @@ SoftmaxAggregator <- S7::new_class(
   }
 )
 
-S7::method(forward, SoftmaxAggregator) <- function(x, tensor, dim = 1, ...) {
-  if (!is.null(x@scorer)) {
-    scores <- x@scorer(tensor)$squeeze(-1)
-  } else {
-    scores <- torch::torch_ones(tensor$size()[1:2])
-  }
-
-  weights <- torch::nnf_softmax(scores, dim = dim)
-
-  if (length(weights$size()) < length(tensor$size())) {
-    weights <- weights$unsqueeze(-1)
-  }
-
-  torch::torch_sum(weights * tensor, dim = dim)
+S7::method(forward, SoftmaxAggregator) <- function(x, adj, tensor, ...) {
+  stop("SoftMaxAggregation is not yet implemented.")
 }
