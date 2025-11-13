@@ -8,3 +8,6 @@
 - `torch_mm()` works on sparse tensors. There are no _sparse_ variants of functions
 - Use latex equations and never utf-8 greek characters
 - All layers belong in a file named `R/layer-{name}.R` for example `R/layer-gcn.R`
+- All models belong in a file named `R/model-{name}.R` for example `R/model-gcn.R`
+- All models must be called `model_name()` 
+- All layers must be called `layer_name()`
