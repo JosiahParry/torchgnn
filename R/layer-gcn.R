@@ -146,7 +146,7 @@ gcn_general_layer <- nn_module(
 
   forward = function(x, adj) {
     if (self$normalize) {
-      adj <- add_graph_self_loops(adj) |> adj_row_normalize()
+      adj <- adj_row_normalize(add_graph_self_loops(adj))
     }
 
     neighbor_agg <- torch_mm(adj, x)
