@@ -30,9 +30,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="layers">Layers<a class="anchor" aria-label="anchor" href="#layers"></a></h2>
 
-
+      <div class="section-desc"><p>Graph neural network layer implementations</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -41,66 +41,75 @@
 
       <dl><dt>
 
-          <code><a href="adj_from_edgelist.html">adj_from_edgelist()</a></code>
-
-        </dt>
-        <dd>Create Sparse Adjacency Matrix from Edge List</dd>
-
-        <dt>
-
-          <code><a href="adjacency.html">gcn_normalize()</a></code> <code><a href="adjacency.html">adj_row_normalize()</a></code> <code><a href="adjacency.html">add_graph_self_loops()</a></code>
-
-        </dt>
-        <dd>Add self-loops to a graph</dd>
-
-        <dt>
-
-          <code><a href="aggregator.html">Aggregator()</a></code> <code><a href="aggregator.html">SumAggregator()</a></code> <code><a href="aggregator.html">MeanAggregator()</a></code> <code><a href="aggregator.html">MaxAggregator()</a></code> <code><a href="aggregator.html">MinAggregator()</a></code> <code><a href="aggregator.html">ProductAggregator()</a></code> <code><a href="aggregator.html">VarAggregator()</a></code> <code><a href="aggregator.html">StdAggregator()</a></code> <code><a href="aggregator.html">LSTMAggregator()</a></code> <code><a href="aggregator.html">SoftmaxAggregator()</a></code>
-
-        </dt>
-        <dd>Message Passing Aggregators</dd>
-
-        <dt>
-
-          <code><a href="gat_layer.html">gat_layer()</a></code>
-
-        </dt>
-        <dd>Graph Attention Network Layer (Veličković et al. 2018)</dd>
-
-        <dt>
-
-          <code><a href="gcn_conv_layer.html">gcn_conv_layer()</a></code>
+          <code><a href="layer_gcn.html">layer_gcn()</a></code>
 
         </dt>
         <dd>GCN Convolutional Layer (Kipf &amp; Welling 2016)</dd>
 
         <dt>
 
-          <code><a href="gcn_conv_model.html">gcn_conv_model()</a></code>
-
-        </dt>
-        <dd>Multi-layer GCN Model</dd>
-
-        <dt>
-
-          <code><a href="gcn_general_layer.html">gcn_general_layer()</a></code>
+          <code><a href="layer_gcn_general.html">layer_gcn_general()</a></code>
 
         </dt>
         <dd>Generalized GCN Layer (Hamilton 2020)</dd>
 
         <dt>
 
-          <code><a href="gcn_general_model.html">gcn_general_model()</a></code>
+          <code><a href="layer_sage.html">layer_sage()</a></code>
+
+        </dt>
+        <dd>GraphSAGE Layer (Hamilton et al. 2017)</dd>
+
+        <dt>
+
+          <code><a href="layer_gat.html">layer_gat()</a></code>
+
+        </dt>
+        <dd>Graph Attention Network Layer (Veličković et al. 2018)</dd>
+
+        <dt>
+
+          <code><a href="layer_gin.html">layer_gin()</a></code>
+
+        </dt>
+        <dd>Graph Isomorphism Network Layer (Xu et al. 2019)</dd>
+
+        <dt>
+
+          <code><a href="layer_regconv.html">layer_regconv()</a></code>
+
+        </dt>
+        <dd>Regional GCN Convolutional Layer (Guo et al. 2025)</dd>
+      </dl></div><div class="section level2">
+      <h2 id="models">Models<a class="anchor" aria-label="anchor" href="#models"></a></h2>
+
+      <div class="section-desc"><p>Pre-built graph neural network models</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="model_gcn.html">model_gcn()</a></code>
+
+        </dt>
+        <dd>Multi-layer GCN Model</dd>
+
+        <dt>
+
+          <code><a href="model_gcn_general.html">model_gcn_general()</a></code>
 
         </dt>
         <dd>Multi-layer Generalized GCN Model (Hamilton 2020)</dd>
 
         <dt>
 
-          <code><a href="graph_split.html">graph_split()</a></code>
+          <code><a href="model_sage.html">model_sage()</a></code>
 
         </dt>
-        <dd>Create Train/Validation/Test Split for Graph Data</dd>
+        <dd>Multi-layer GraphSAGE Model (Hamilton et al. 2017)</dd>
 
         <dt>
 
@@ -111,6 +120,36 @@
 
         <dt>
 
+          <code><a href="model_gin.html">model_gin()</a></code>
+
+        </dt>
+        <dd>Multi-layer Graph Isomorphism Network Model (Xu et al. 2019)</dd>
+      </dl></div><div class="section level2">
+      <h2 id="graph-utilities">Graph Utilities<a class="anchor" aria-label="anchor" href="#graph-utilities"></a></h2>
+
+      <div class="section-desc"><p>Functions for constructing and manipulating graphs</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="graph_split.html">graph_split()</a></code>
+
+        </dt>
+        <dd>Create Train/Validation/Test Split for Graph Data</dd>
+
+        <dt>
+
+          <code><a href="adj_from_edgelist.html">adj_from_edgelist()</a></code>
+
+        </dt>
+        <dd>Create Sparse Adjacency Matrix from Edge List</dd>
+
+        <dt>
+
           <code><a href="nodes_to_tensor.html">nodes_to_tensor()</a></code>
 
         </dt>
@@ -118,26 +157,45 @@
 
         <dt>
 
-          <code><a href="regconv_layer.html">regconv_layer()</a></code>
+          <code><a href="adjacency.html">gcn_normalize()</a></code> <code><a href="adjacency.html">adj_row_normalize()</a></code> <code><a href="adjacency.html">add_graph_self_loops()</a></code>
 
         </dt>
-        <dd>Regional GCN Convolutional Layer (Guo et al. 2025)</dd>
+        <dd>Add self-loops to a graph</dd>
+      </dl></div><div class="section level2">
+      <h2 id="pooling">Pooling<a class="anchor" aria-label="anchor" href="#pooling"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Global pooling operations for graph-level representations</p></div>
 
-          <code><a href="sage_layer.html">sage_layer()</a></code>
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="pooling.html">pool_global_add()</a></code> <code><a href="pooling.html">pool_global_mean()</a></code> <code><a href="pooling.html">pool_global_max()</a></code>
 
         </dt>
-        <dd>GraphSAGE Layer (Hamilton et al. 2017)</dd>
+        <dd>Graph Pooling Functions</dd>
+      </dl></div><div class="section level2">
+      <h2 id="aggregators">Aggregators<a class="anchor" aria-label="anchor" href="#aggregators"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Message passing aggregators for combining neighbor features</p></div>
 
-          <code><a href="sage_model.html">sage_model()</a></code>
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="aggregator.html">Aggregator()</a></code> <code><a href="aggregator.html">SumAggregator()</a></code> <code><a href="aggregator.html">MeanAggregator()</a></code> <code><a href="aggregator.html">MaxAggregator()</a></code> <code><a href="aggregator.html">MinAggregator()</a></code> <code><a href="aggregator.html">ProductAggregator()</a></code> <code><a href="aggregator.html">VarAggregator()</a></code> <code><a href="aggregator.html">StdAggregator()</a></code> <code><a href="aggregator.html">LSTMAggregator()</a></code> <code><a href="aggregator.html">SoftmaxAggregator()</a></code>
 
         </dt>
-        <dd>Multi-layer GraphSAGE Model (Hamilton et al. 2017)</dd>
+        <dd>Message Passing Aggregators</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

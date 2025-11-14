@@ -61,27 +61,27 @@
 <p>The following layers are implemented</p>
 <ul>
 <li>
-<code><a href="reference/gcn_conv_layer.html">gcn_conv_layer()</a></code>: Standard GCN layer (Kipf &amp; Welling, 2016)</li>
+<code>gcn_conv_layer()</code>: Standard GCN layer (Kipf &amp; Welling, 2016)</li>
 <li>
-<code><a href="reference/gcn_general_layer.html">gcn_general_layer()</a></code>: Generalized GCN layer (Hamilton, 2020)</li>
+<code>gcn_general_layer()</code>: Generalized GCN layer (Hamilton, 2020)</li>
 <li>
-<code><a href="reference/sage_layer.html">sage_layer()</a></code>: GraphSAGE layer (Hamilton, Ying, and Leskovec, 2017)</li>
+<code>sage_layer()</code>: GraphSAGE layer (Hamilton, Ying, and Leskovec, 2017)</li>
 <li>
-<code><a href="reference/regconv_layer.html">regconv_layer()</a></code>: RegionConv layer for regionalized GCN (Guo et al. 2025)</li>
+<code>regconv_layer()</code>: RegionConv layer for regionalized GCN (Guo et al. 2025)</li>
 </ul>
 <div class="section level3">
 <h3 id="models">Models<a class="anchor" aria-label="anchor" href="#models"></a>
 </h3>
 <p><a href="https://josiahparry.github.io/torchgnn/">torchgnn</a> provides utilities to create GNN models with multiple layers.</p>
 <ul>
-<li><code><a href="reference/gcn_conv_model.html">gcn_conv_model()</a></code></li>
-<li><code><a href="reference/gcn_general_model.html">gcn_general_model()</a></code></li>
-<li><code>model_sage()</code></li>
+<li><code>gcn_conv_model()</code></li>
+<li><code>gcn_general_model()</code></li>
+<li><code><a href="reference/model_sage.html">model_sage()</a></code></li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://josiahparry.github.io/torchgnn/">torchgnn</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="reference/gcn_general_model.html">gcn_general_model</a></span><span class="op">(</span></span>
+<span><span class="fu">gcn_general_model</span><span class="op">(</span></span>
 <span>  in_features <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>  hidden_dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">32</span>, <span class="fl">16</span><span class="op">)</span>,</span>
 <span>  out_features <span class="op">=</span> <span class="fl">1</span></span>
@@ -243,7 +243,7 @@ data preparation
 <span><span class="va">split</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/graph_split.html">graph_split</a></span><span class="op">(</span><span class="va">X</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span></code></pre></div>
 </details><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># define a 2 layer GCN model</span></span>
-<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gcn_conv_model.html">gcn_conv_model</a></span><span class="op">(</span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">gcn_conv_model</span><span class="op">(</span></span>
 <span>  <span class="co"># number of variables</span></span>
 <span>  in_features <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>  <span class="co"># define our hidden layers</span></span>

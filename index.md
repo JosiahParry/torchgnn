@@ -15,23 +15,20 @@ pak::pak("josiahparry/torchgnn")
 
 The following layers are implemented
 
-- [`gcn_conv_layer()`](https://josiahparry.github.io/torchgnn/reference/gcn_conv_layer.md):
-  Standard GCN layer (Kipf & Welling, 2016)
-- [`gcn_general_layer()`](https://josiahparry.github.io/torchgnn/reference/gcn_general_layer.md):
-  Generalized GCN layer (Hamilton, 2020)
-- [`sage_layer()`](https://josiahparry.github.io/torchgnn/reference/sage_layer.md):
-  GraphSAGE layer (Hamilton, Ying, and Leskovec, 2017)
-- [`regconv_layer()`](https://josiahparry.github.io/torchgnn/reference/regconv_layer.md):
-  RegionConv layer for regionalized GCN (Guo et al. 2025)
+- `gcn_conv_layer()`: Standard GCN layer (Kipf & Welling, 2016)
+- `gcn_general_layer()`: Generalized GCN layer (Hamilton, 2020)
+- `sage_layer()`: GraphSAGE layer (Hamilton, Ying, and Leskovec, 2017)
+- `regconv_layer()`: RegionConv layer for regionalized GCN (Guo et
+  al. 2025)
 
 ### Models
 
 [torchgnn](https://josiahparry.github.io/torchgnn/) provides utilities
 to create GNN models with multiple layers.
 
-- [`gcn_conv_model()`](https://josiahparry.github.io/torchgnn/reference/gcn_conv_model.md)
-- [`gcn_general_model()`](https://josiahparry.github.io/torchgnn/reference/gcn_general_model.md)
-- `model_sage()`
+- `gcn_conv_model()`
+- `gcn_general_model()`
+- [`model_sage()`](https://josiahparry.github.io/torchgnn/reference/model_sage.md)
 
 ``` r
 library(torchgnn)

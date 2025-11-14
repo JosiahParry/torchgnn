@@ -30,3 +30,5 @@
 - All models must be called `model_name()`
 
 - All layers must be called `layer_name()`
+
+- All pooling functions must be called `pool_global_name()`
