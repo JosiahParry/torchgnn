@@ -45,7 +45,7 @@
 #' Graph Attention Networks. International Conference on Learning Representations.
 #' <doi:10.48550/arXiv.1710.10903>
 #' @export
-gat_layer <- nn_module(
+layer_gat <- nn_module(
   "GATLayer",
 
   initialize = function(

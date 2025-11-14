@@ -15,13 +15,13 @@
 #'
 #' @details
 #' These functions implement different reduction strategies:
-#' - `global_add_pool`: Sum of node features per graph
-#' - `global_mean_pool`: Mean of node features per graph
-#' - `global_max_pool`: Element-wise maximum of node features per graph
+#' - `pool_global_add`: Sum of node features per graph
+#' - `pool_global_mean`: Mean of node features per graph
+#' - `pool_global_max`: Element-wise maximum of node features per graph
 #'
 #' @rdname pooling
 #' @export
-global_add_pool <- function(x, batch = NULL, size = NULL) {
+pool_global_add <- function(x, batch = NULL, size = NULL) {
   if (is.null(batch)) {
     return(x$sum(dim = 1, keepdim = TRUE))
   }
@@ -40,7 +40,7 @@ global_add_pool <- function(x, batch = NULL, size = NULL) {
 
 #' @rdname pooling
 #' @export
-global_mean_pool <- function(x, batch = NULL, size = NULL) {
+pool_global_mean <- function(x, batch = NULL, size = NULL) {
   if (is.null(batch)) {
     return(x$mean(dim = 1, keepdim = TRUE))
   }
@@ -62,7 +62,7 @@ global_mean_pool <- function(x, batch = NULL, size = NULL) {
 
 #' @rdname pooling
 #' @export
-global_max_pool <- function(x, batch = NULL, size = NULL) {
+pool_global_max <- function(x, batch = NULL, size = NULL) {
   if (is.null(batch)) {
     return(x$max(dim = 1, keepdim = TRUE)[[1]])
   }

@@ -2,3 +2,54 @@ url: https://josiahparry.github.io/torchgnn/
 template:
   bootstrap: 5
 
+reference:
+- title: Layers
+  desc: Graph neural network layer implementations
+  contents:
+  - layer_gcn
+  - layer_gcn_general
+  - layer_sage
+  - layer_gat
+  - layer_gin
+  - layer_regconv
+
+- title: Models
+  desc: Pre-built graph neural network models
+  contents:
+  - model_gcn
+  - model_gcn_general
+  - model_sage
+  - model_gat
+  - model_gin
+
+- title: Graph Utilities
+  desc: Functions for constructing and manipulating graphs
+  contents:
+  - graph_split
+  - adj_from_edgelist
+  - nodes_to_tensor
+  - gcn_normalize
+  - adj_row_normalize
+  - add_graph_self_loops
+
+- title: Pooling
+  desc: Global pooling operations for graph-level representations
+  contents:
+  - pool_global_add
+  - pool_global_mean
+  - pool_global_max
+
+- title: Aggregators
+  desc: Message passing aggregators for combining neighbor features
+  contents:
+  - Aggregator
+  - SumAggregator
+  - MeanAggregator
+  - MaxAggregator
+  - MinAggregator
+  - ProductAggregator
+  - VarAggregator
+  - StdAggregator
+  - LSTMAggregator
+  - SoftmaxAggregator
+

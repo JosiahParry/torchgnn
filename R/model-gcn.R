@@ -39,10 +39,10 @@
 #' @examples
 #' \dontrun{
 #' # Binary classification with sigmoid
-#' model <- gcn_model(14, c(56, 56), 1, output_activation = nnf_sigmoid)
+#' model <- model_gcn(14, c(56, 56), 1, output_activation = nnf_sigmoid)
 #'
 #' # Multi-class with softmax
-#' model <- gcn_model(
+#' model <- model_gcn(
 #'   14,
 #'   c(32, 32),
 #'   10,
@@ -50,15 +50,15 @@
 #' )
 #'
 #' # Regression (no output activation)
-#' model <- gcn_model(14, c(64, 64), 1)
+#' model <- model_gcn(14, c(64, 64), 1)
 #'
 #' # With dropout and tanh activation
-#' model <- gcn_model(14, c(56, 56), 1,
+#' model <- model_gcn(14, c(56, 56), 1,
 #'                    activation = nnf_tanh,
 #'                    dropout = 0.5)
 #' }
 #' @export
-gcn_conv_model <- nn_module(
+model_gcn <- nn_module(
   "GCNConvModel",
 
   initialize = function(
@@ -73,7 +73,7 @@ gcn_conv_model <- nn_module(
     layers <- list()
 
     # Input to first hidden layer
-    layers[[1]] <- gcn_conv_layer(
+    layers[[1]] <- layer_gcn(
       in_features,
       hidden_dims[1],
       normalize = normalize
@@ -82,7 +82,7 @@ gcn_conv_model <- nn_module(
     # Additional hidden layers
     if (length(hidden_dims) > 1) {
       for (i in 2:length(hidden_dims)) {
-        layers[[i]] <- gcn_conv_layer(
+        layers[[i]] <- layer_gcn(
           hidden_dims[i - 1],
           hidden_dims[i],
           normalize = normalize
@@ -91,7 +91,7 @@ gcn_conv_model <- nn_module(
     }
 
     # Output layer
-    layers[[length(layers) + 1]] <- gcn_conv_layer(
+    layers[[length(layers) + 1]] <- layer_gcn(
       hidden_dims[length(hidden_dims)],
       out_features,
       normalize = normalize

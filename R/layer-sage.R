@@ -39,7 +39,7 @@
 #' Hamilton, W., Ying, Z., & Leskovec, J. (2017). Inductive representation learning
 #' on large graphs. Advances in Neural Information Processing Systems, 30. <doi:10.48550/arXiv.1706.02216>
 #' @export
-sage_layer <- nn_module(
+layer_sage <- nn_module(
   "SAGELayer",
 
   initialize = function(

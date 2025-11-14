@@ -49,7 +49,7 @@
 #' of the American Association of Geographers, 1–17.
 #' <doi:10.1080/24694452.2025.2558661>
 #' @export
-regconv_layer <- nn_module(
+layer_regconv <- nn_module(
   "RegConvLayer",
 
   initialize = function(in_features, out_features, n_regions) {

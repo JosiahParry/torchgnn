@@ -32,10 +32,10 @@
 #' @examples
 #' \dontrun{
 #' # Binary classification with sigmoid and mean aggregation
-#' model <- sage_model(14, c(56, 56), 1, output_activation = nnf_sigmoid)
+#' model <- model_sage(14, c(56, 56), 1, output_activation = nnf_sigmoid)
 #'
 #' # Multi-class with softmax and max aggregation
-#' model <- sage_model(
+#' model <- model_sage(
 #'   14,
 #'   c(32, 32),
 #'   10,
@@ -44,10 +44,10 @@
 #' )
 #'
 #' # Regression with sum aggregation
-#' model <- sage_model(14, c(64, 64), 1, aggregator = SumAggregator())
+#' model <- model_sage(14, c(64, 64), 1, aggregator = SumAggregator())
 #'
 #' # With dropout and custom activation
-#' model <- sage_model(
+#' model <- model_sage(
 #'   14,
 #'   c(56, 56),
 #'   1,
@@ -61,7 +61,7 @@
 #' on large graphs. Advances in Neural Information Processing Systems, 30.
 #' <doi:10.48550/arXiv.1706.02216>
 #' @export
-sage_model <- nn_module(
+model_sage <- nn_module(
   "SAGEModel",
 
   initialize = function(
@@ -77,7 +77,7 @@ sage_model <- nn_module(
     layers <- list()
 
     # Input to first hidden layer
-    layers[[1]] <- sage_layer(
+    layers[[1]] <- layer_sage(
       in_features,
       hidden_dims[1],
       aggregator = aggregator,
@@ -87,7 +87,7 @@ sage_model <- nn_module(
     # Additional hidden layers
     if (length(hidden_dims) > 1) {
       for (i in 2:length(hidden_dims)) {
-        layers[[i]] <- sage_layer(
+        layers[[i]] <- layer_sage(
           hidden_dims[i - 1],
           hidden_dims[i],
           aggregator = aggregator,
@@ -97,7 +97,7 @@ sage_model <- nn_module(
     }
 
     # Output layer
-    layers[[length(layers) + 1]] <- sage_layer(
+    layers[[length(layers) + 1]] <- layer_sage(
       hidden_dims[length(hidden_dims)],
       out_features,
       aggregator = aggregator,

@@ -3,7 +3,7 @@
 #' Stacks multiple generalized GCN layers with neighbor/self weight separation.
 #' Optional row-normalization is applied internally if `normalize = TRUE`.
 #' @export
-gcn_general_model <- nn_module(
+model_gcn_general <- nn_module(
   "GeneralizedGCNModel",
 
   initialize = function(
@@ -18,19 +18,19 @@ gcn_general_model <- nn_module(
     layers <- list()
 
     # Input to first hidden layer
-    layers[[1]] <- gcn_general_layer(in_features, hidden_dims[1])
+    layers[[1]] <- layer_gcn_general(in_features, hidden_dims[1])
     layers[[1]]$normalize <- normalize
 
     # Additional hidden layers
     if (length(hidden_dims) > 1) {
       for (i in 2:length(hidden_dims)) {
-        layers[[i]] <- gcn_general_layer(hidden_dims[i - 1], hidden_dims[i])
+        layers[[i]] <- layer_gcn_general(hidden_dims[i - 1], hidden_dims[i])
         layers[[i]]$normalize <- normalize
       }
     }
 
     # Output layer
-    layers[[length(layers) + 1]] <- gcn_general_layer(
+    layers[[length(layers) + 1]] <- layer_gcn_general(
       hidden_dims[length(hidden_dims)],
       out_features
     )

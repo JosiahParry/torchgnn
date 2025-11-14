@@ -71,7 +71,7 @@ model_gat <- nn_module(
     layers <- list()
 
     # Input to first hidden layer
-    layers[[1]] <- gat_layer(
+    layers[[1]] <- layer_gat(
       in_features,
       hidden_dims[1],
       heads = heads,
@@ -83,7 +83,7 @@ model_gat <- nn_module(
     # Additional hidden layers
     if (length(hidden_dims) > 1) {
       for (i in 2:length(hidden_dims)) {
-        layers[[i]] <- gat_layer(
+        layers[[i]] <- layer_gat(
           hidden_dims[i - 1] * heads,
           hidden_dims[i],
           heads = heads,
@@ -95,7 +95,7 @@ model_gat <- nn_module(
     }
 
     # Output layer (average heads instead of concatenate)
-    layers[[length(layers) + 1]] <- gat_layer(
+    layers[[length(layers) + 1]] <- layer_gat(
       hidden_dims[length(hidden_dims)] * heads,
       out_features,
       heads = out_heads,

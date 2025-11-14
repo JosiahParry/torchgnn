@@ -38,7 +38,7 @@
 #' Kipf, T. N., & Welling, M. (2016). Semi-supervised classification with
 #' graph convolutional networks. arXiv preprint arXiv:1609.02907. <doi:10.48550/arXiv.1609.02907>
 #' @export
-gcn_conv_layer <- nn_module(
+layer_gcn <- nn_module(
   "GCNConvLayer",
 
   initialize = function(
@@ -125,7 +125,7 @@ gcn_conv_layer <- nn_module(
 #' of the American Association of Geographers, 1–17.
 #' <doi:10.1080/24694452.2025.2558661>
 #' @export
-gcn_general_layer <- nn_module(
+layer_gcn_general <- nn_module(
   "GCNGeneralLayer",
 
   initialize = function(
