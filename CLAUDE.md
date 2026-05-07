@@ -13,9 +13,6 @@
 
 - Always use 1 based indexing.
 
-- When getting indices using `$indices()` always add `+ 1L` to get the 1
-  based index.
-
 - `torch_mm()` works on sparse tensors. There are no *sparse* variants
   of functions
 

@@ -7,13 +7,13 @@
 
 ## Citation
 
-Parry J (2025). *torchgnn: Graph Neural Network Extensions for 'torch'*.
+Parry J (2026). *torchgnn: Graph Neural Network Extensions for 'torch'*.
 R package version 0.0.0.9000, <https://josiahparry.github.io/torchgnn/>.
 
     @Manual{,
       title = {torchgnn: Graph Neural Network Extensions for `torch`},
       author = {Josiah Parry},
-      year = {2025},
+      year = {2026},
       note = {R package version 0.0.0.9000},
       url = {https://josiahparry.github.io/torchgnn/},
     }

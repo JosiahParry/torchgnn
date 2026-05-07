@@ -8,6 +8,7 @@ in R.
 Install the development version:
 
 ``` r
+
 pak::pak("josiahparry/torchgnn")
 ```
 
@@ -31,6 +32,7 @@ to create GNN models with multiple layers.
 - [`model_sage()`](https://josiahparry.github.io/torchgnn/reference/model_sage.md)
 
 ``` r
+
 library(torchgnn)
 
 gcn_general_model(
@@ -71,6 +73,7 @@ present.
   Standard deviation of neighbor features
 
 ``` r
+
 MeanAggregator()
 ```
 
@@ -91,6 +94,7 @@ matrix.
 from edge list (supports character IDs, too)
 
 ``` r
+
 set.seed(0)
 i <- sort(rep.int(1:10, 5))
 j <- sample(1:10, 50, TRUE)
@@ -139,6 +143,7 @@ values:
 dataframe to a tensor with correct ordering.
 
 ``` r
+
 train_data <- as.data.frame(
   matrix(runif(10 * 5, max = 20), nrow = 10)
 )
@@ -168,6 +173,7 @@ large graphs into [torch](https://torch.mlverse.org/docs) and
 [luz](https://mlverse.github.io/luz/) is figured out.
 
 ``` r
+
 graph_split(adj)
 ```
 
@@ -191,6 +197,7 @@ This example creates a GCN model
 data preparation
 
 ``` r
+
 library(torch)
 library(torchgnn)
 library(nanoparquet)
@@ -234,6 +241,7 @@ split <- graph_split(X, seed = 42)
 ```
 
 ``` r
+
 # define a 2 layer GCN model
 model <- gcn_conv_model(
   # number of variables
@@ -255,6 +263,7 @@ An `nn_module` containing 8,067 parameters.
 ```
 
 ``` r
+
 # use ADAM optimizer
 optimizer <- optim_adam(model$parameters, lr = 0.01)
 
@@ -302,6 +311,7 @@ Epoch 100 | Loss: 0.4001 | Val Acc: 0.8618
 ```
 
 ``` r
+
 model$eval()
 with_no_grad({
   test_out <- model(X, adj)
