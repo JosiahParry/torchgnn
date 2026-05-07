@@ -28,7 +28,7 @@ node_label <- readr::read_csv(
 )
 
 node_label_tensor <- torch_tensor(
-  node_label$node_label + 1L,
+  node_label$node_label,
   dtype = torch_long()
 )
 

@@ -84,7 +84,7 @@ layer_gat <- nn_module(
   forward = function(x, adj) {
     n_nodes <- x$size(1)
     n_features <- self$out_features
-    idx <- adj$indices() + 1L
+    idx <- adj$indices()
 
     source_nodes <- idx[1, ]
     target_nodes <- idx[2, ]

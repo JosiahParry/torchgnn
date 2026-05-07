@@ -6,7 +6,7 @@ gcn_normalize <- function(adj) {
   deg_inv_sqrt <- deg$pow(-0.5)
   deg_inv_sqrt[deg_inv_sqrt == Inf] <- 0
 
-  indices <- adj$indices() + 1L
+  indices <- adj$indices()
   values <- adj$values()
 
   row_deg <- deg_inv_sqrt[indices[1, ]]
@@ -29,7 +29,7 @@ adj_row_normalize <- function(adj) {
   deg_inv[deg_inv == Inf] <- 0
 
   # Scale nonzero values per row
-  indices <- adj$indices() + 1L
+  indices <- adj$indices()
   values <- adj$values()
 
   row_deg <- deg_inv[indices[1, ]]
@@ -46,7 +46,7 @@ adj_row_normalize <- function(adj) {
 #' @export
 add_graph_self_loops <- function(adj) {
   n <- adj$size()[[1]]
-  indices <- adj$indices() + 1L
+  indices <- adj$indices()
   values <- adj$values()
 
   # Identify non-self-loop edges

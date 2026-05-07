@@ -105,7 +105,7 @@ MaxAggregator <- S7::new_class(
 S7::method(forward, MaxAggregator) <- function(x, adj, tensor, ...) {
   n_nodes <- tensor$size(1)
   n_features <- tensor$size(2)
-  idx <- adj$indices() + 1L
+  idx <- adj$indices()
 
   target_idx <- idx[1, ]
   source_idx <- idx[2, ]
@@ -140,7 +140,7 @@ MinAggregator <- S7::new_class(
 S7::method(forward, MinAggregator) <- function(x, adj, tensor, ...) {
   n_nodes <- tensor$size(1)
   n_features <- tensor$size(2)
-  idx <- adj$indices() + 1L
+  idx <- adj$indices()
 
   target_idx <- idx[1, ]
   source_idx <- idx[2, ]
@@ -175,7 +175,7 @@ ProductAggregator <- S7::new_class(
 S7::method(forward, ProductAggregator) <- function(x, adj, tensor, ...) {
   n_nodes <- tensor$size(1)
   n_features <- tensor$size(2)
-  idx <- adj$indices() + 1L
+  idx <- adj$indices()
 
   target_idx <- idx[1, ]
   source_idx <- idx[2, ]
@@ -210,7 +210,7 @@ VarAggregator <- S7::new_class(
 S7::method(forward, VarAggregator) <- function(x, adj, tensor, ...) {
   n_nodes <- tensor$size(1)
   n_features <- tensor$size(2)
-  idx <- adj$indices() + 1L
+  idx <- adj$indices()
 
   target_idx <- idx[1, ]
   source_idx <- idx[2, ]
@@ -257,7 +257,7 @@ StdAggregator <- S7::new_class(
 S7::method(forward, StdAggregator) <- function(x, adj, tensor, ...) {
   n_nodes <- tensor$size(1)
   n_features <- tensor$size(2)
-  idx <- adj$indices() + 1L
+  idx <- adj$indices()
 
   target_idx <- idx[1, ]
   source_idx <- idx[2, ]

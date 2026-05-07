@@ -4,7 +4,6 @@
 
 - Don't add comments that say exactly what the line of code is doing.
 - Always use 1 based indexing.
-- When getting indices using `$indices()` always add `+ 1L` to get the 1 based index.
 - `torch_mm()` works on sparse tensors. There are no _sparse_ variants of functions
 - Use latex equations and never utf-8 greek characters
 - All layers belong in a file named `R/layer-{name}.R` for example `R/layer-gcn.R`

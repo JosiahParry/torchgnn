@@ -1,5 +1,5 @@
 as_sparse_matrix <- function(adj) {
-  idx <- adj$indices() + 1L
+  idx <- adj$indices()
   vals <- adj$values()
 
   Matrix::sparseMatrix(
