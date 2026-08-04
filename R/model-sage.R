@@ -21,11 +21,17 @@
 #' @param dropout Numeric. Dropout rate (0-1) applied after each hidden layer. Default: 0
 #' @param concat Logical. If TRUE, concatenates self and neighbor features. If FALSE,
 #'   adds them. Default: TRUE
+#' @param norm `nn_module` generator or NULL. Normalization applied after each
+#'   hidden layer, before the activation. Called once per hidden layer with that
+#'   layer's output dimension. Default: NULL
 #'
 #' @section Forward pass:
 #' @param x Tensor `n_nodes x in_features`. Node feature matrix (dense or sparse)
 #' @param adj Sparse torch tensor `n_nodes x n_nodes`. Adjacency matrix defining graph
 #'   structure. Must be a sparse COO tensor.
+#' @param batch Tensor or NULL. Batch vector assigning each node to a graph, using
+#'   1-based graph indices. Passed to `norm`. If NULL, all nodes are treated as a
+#'   single graph.
 #'
 #' @return Tensor `n_nodes x out_features`. Final predictions
 #'
@@ -54,6 +60,16 @@
 #'   activation = nnf_tanh,
 #'   dropout = 0.5
 #' )
+#'
+#' # With normalization after each hidden layer
+#' model <- model_sage(14, c(56, 32), 1, norm = layer_layer_norm)
+#'
+#' model <- model_sage(
+#'   14,
+#'   c(56, 32),
+#'   1,
+#'   norm = \(d) layer_layer_norm(d, mode = "node")
+#' )
 #' }
 #'
 #' @references
@@ -72,7 +88,8 @@ model_sage <- nn_module(
     activation = nnf_relu,
     out_activation = NULL,
     dropout = 0,
-    concat = TRUE
+    concat = TRUE,
+    norm = NULL
   ) {
     layers <- list()
 
@@ -105,24 +122,47 @@ model_sage <- nn_module(
     )
 
     self$layers <- nn_module_list(layers)
+
+    if (is.null(norm)) {
+      self$norms <- NULL
+    } else {
+      self$norms <- nn_module_list(lapply(hidden_dims, norm))
+    }
+
     self$activation <- activation
     self$out_activation <- out_activation
     self$dropout_rate <- dropout
   },
 
-  forward = function(x, adj) {
-    for (i in seq_along(self$layers)) {
-      x <- self$layers[[i]](x, adj)
-
-      if (i < length(self$layers)) {
-        x <- self$activation(x)
-        if (self$training && self$dropout_rate > 0) {
-          x <- nnf_dropout(x, p = self$dropout_rate)
-        }
-      } else if (!is.null(self$out_activation)) {
-        x <- self$out_activation(x)
-      }
+  normalize = function(x, i, batch) {
+    if (is.null(self$norms)) {
+      return(x)
     }
-    x
+    self$norms[[i]](x, batch)
+  },
+
+  regularize = function(x) {
+    if (!self$training || self$dropout_rate <= 0) {
+      return(x)
+    }
+    nnf_dropout(x, p = self$dropout_rate)
+  },
+
+  forward = function(x, adj, batch = NULL) {
+    n_hidden <- length(self$layers) - 1
+
+    for (i in seq_len(n_hidden)) {
+      x <- self$layers[[i]](x, adj)
+      x <- self$normalize(x, i, batch)
+      x <- self$activation(x)
+      x <- self$regularize(x)
+    }
+
+    x <- self$layers[[n_hidden + 1]](x, adj)
+
+    if (is.null(self$out_activation)) {
+      return(x)
+    }
+    self$out_activation(x)
   }
 )

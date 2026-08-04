@@ -12,7 +12,8 @@ model_sage(
   activation = nnf_relu,
   out_activation = NULL,
   dropout = 0,
-  concat = TRUE
+  concat = TRUE,
+  norm = NULL
 )
 }
 \arguments{
@@ -34,10 +35,18 @@ Default: \code{MeanAggregator()}}
 \item{concat}{Logical. If TRUE, concatenates self and neighbor features. If FALSE,
 adds them. Default: TRUE}
 
+\item{norm}{\code{nn_module} generator or NULL. Normalization applied after each
+hidden layer, before the activation. Called once per hidden layer with that
+layer's output dimension. Default: NULL}
+
 \item{x}{Tensor \verb{n_nodes x in_features}. Node feature matrix (dense or sparse)}
 
 \item{adj}{Sparse torch tensor \verb{n_nodes x n_nodes}. Adjacency matrix defining graph
 structure. Must be a sparse COO tensor.}
+
+\item{batch}{Tensor or NULL. Batch vector assigning each node to a graph, using
+1-based graph indices. Passed to \code{norm}. If NULL, all nodes are treated as a
+single graph.}
 }
 \value{
 Tensor \verb{n_nodes x out_features}. Final predictions
@@ -84,6 +93,16 @@ model <- model_sage(
   1,
   activation = nnf_tanh,
   dropout = 0.5
+)
+
+# With normalization after each hidden layer
+model <- model_sage(14, c(56, 32), 1, norm = layer_layer_norm)
+
+model <- model_sage(
+  14,
+  c(56, 32),
+  1,
+  norm = \(d) layer_layer_norm(d, mode = "node")
 )
 }
 
