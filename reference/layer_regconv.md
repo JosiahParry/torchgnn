@@ -54,27 +54,6 @@ layer_regconv(in_features, out_features, n_regions)
 
   Integer. Number of spatial regions/regimes
 
-- x:
-
-  Tensor `n_nodes x in_features`. Node feature matrix
-
-- adj:
-
-  Tensor `n_nodes x n_nodes`. Adjacency matrix. Expected to be
-  row-normalized \\D^{-1}A\\ where \\D\\ is the degree matrix. Can be
-  binary or weighted
-
-- region_assignments:
-
-  Tensor `n_nodes`. Integer vector with values in `1:n_regions`,
-  indicating which region each node belongs to. Multiple nodes can
-  belong to the same region
-
-- edge_weight:
-
-  Tensor `n_nodes x n_nodes` or NULL. Optional edge weights to apply to
-  the adjacency matrix. If NULL, uses values from `adj`. Default: NULL
-
 ## Value
 
 Tensor `n_nodes x out_features`. Transformed node features (before
@@ -97,9 +76,43 @@ spatial heterogeneity.
 
 ## Forward pass
 
+`layer(x, adj, region_assignments, edge_weight = NULL)`
+
+- `x`: Tensor `n_nodes x in_features`. Node feature matrix.
+
+- `adj`: Sparse COO tensor `n_nodes x n_nodes`. Adjacency matrix,
+  expected to be row-normalized \\D^{-1}A\\ where \\D\\ is the degree
+  matrix. Can be binary or weighted.
+
+- `region_assignments`: Tensor `n_nodes`. Integer vector with values in
+  `1:n_regions` giving the region each node belongs to. Multiple nodes
+  can belong to the same region.
+
+- `edge_weight`: Tensor `n_nodes x n_nodes` or `NULL`. Optional edge
+  weights applied to the adjacency matrix. If `NULL`, the values of
+  `adj` are used.
+
 ## References
 
 Guo, H., Wang, H., Zhu, D., Wu, L., Fotheringham, A. S., & Liu, Y.
 (2025). RegionGCN: Spatial-Heterogeneity-Aware Graph Convolutional
 Networks. Annals of the American Association of Geographers, 1–17.
 <doi:10.1080/24694452.2025.2558661>
+
+## Examples
+
+``` r
+if (FALSE) { # torch::torch_is_installed()
+adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+x <- torch::torch_randn(4, 8)
+
+# This layer expects a row-normalized adjacency matrix
+adj_norm <- adj_row_normalize(add_graph_self_loops(adj))
+
+# Four nodes split across two spatial regimes
+regions <- torch::torch_tensor(c(1, 1, 2, 2), dtype = torch::torch_long())
+
+layer <- layer_regconv(8, 4, n_regions = 2)
+layer(x, adj_norm, regions)
+}
+```

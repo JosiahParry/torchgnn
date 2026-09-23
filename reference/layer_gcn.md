@@ -28,16 +28,6 @@ layer_gcn(in_features, out_features, bias = TRUE, normalize = TRUE)
   Logical. Whether to add self-loops and compute symmetric normalization
   on-the-fly. Default: TRUE
 
-- x:
-
-  Tensor `n_nodes x in_features`. Node feature matrix
-
-- adj:
-
-  Tensor `n_nodes x n_nodes`. Adjacency matrix defining graph structure.
-  Can be binary (0/1) or weighted. If `edge_weight` is provided, `adj`
-  should be binary and weights will be applied from `edge_weight`
-
 ## Value
 
 Tensor `n_nodes x out_features`. Transformed node features
@@ -69,8 +59,32 @@ Parameters:
 
 ## Forward pass
 
+`layer(x, adj)`
+
+- `x`: Tensor `n_nodes x in_features`. Node feature matrix.
+
+- `adj`: Sparse COO tensor `n_nodes x n_nodes`. Adjacency matrix
+  defining graph structure. Can be binary (0/1) or weighted.
+
 ## References
 
 Kipf, T. N., & Welling, M. (2016). Semi-supervised classification with
 graph convolutional networks. arXiv preprint arXiv:1609.02907.
 <doi:10.48550/arXiv.1609.02907>
+
+## Examples
+
+``` r
+if (FALSE) { # torch::torch_is_installed()
+adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+x <- torch::torch_randn(4, 8)
+
+layer <- layer_gcn(8, 4)
+layer(x, adj)
+
+# Normalize once up front and reuse across layers
+adj_norm <- gcn_normalize(add_graph_self_loops(adj))
+layer <- layer_gcn(8, 4, normalize = FALSE)
+layer(x, adj_norm)
+}
+```

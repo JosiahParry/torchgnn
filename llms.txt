@@ -5,37 +5,55 @@ in R.
 
 ## Installation
 
-Install the development version:
+Install the released version from CRAN:
 
 ``` r
 
-pak::pak("josiahparry/torchgnn")
+install.packages("torchgnn")
+```
+
+Or the development version from GitHub:
+
+``` r
+
+pak::pak("JosiahParry/torchgnn")
 ```
 
 ## Features
 
 The following layers are implemented
 
-- `gcn_conv_layer()`: Standard GCN layer (Kipf & Welling, 2016)
-- `gcn_general_layer()`: Generalized GCN layer (Hamilton, 2020)
-- `sage_layer()`: GraphSAGE layer (Hamilton, Ying, and Leskovec, 2017)
-- `regconv_layer()`: RegionConv layer for regionalized GCN (Guo et
-  al. 2025)
+- [`layer_gcn()`](https://josiahparry.github.io/torchgnn/reference/layer_gcn.md):
+  Standard GCN layer (Kipf & Welling, 2017)
+- [`layer_gcn_general()`](https://josiahparry.github.io/torchgnn/reference/layer_gcn_general.md):
+  Generalized GCN layer (Hamilton, 2020)
+- [`layer_sage()`](https://josiahparry.github.io/torchgnn/reference/layer_sage.md):
+  GraphSAGE layer (Hamilton, Ying, and Leskovec, 2017)
+- [`layer_gat()`](https://josiahparry.github.io/torchgnn/reference/layer_gat.md):
+  Graph attention layer (Veličković et al., 2018)
+- [`layer_gin()`](https://josiahparry.github.io/torchgnn/reference/layer_gin.md):
+  Graph isomorphism layer (Xu et al., 2019)
+- [`layer_regconv()`](https://josiahparry.github.io/torchgnn/reference/layer_regconv.md):
+  RegionConv layer for regionalized GCN (Guo et al. 2025)
+- [`layer_layer_norm()`](https://josiahparry.github.io/torchgnn/reference/layer_layer_norm.md):
+  Layer normalization over graphs or nodes (Ba et al., 2016)
 
 ### Models
 
 [torchgnn](https://josiahparry.github.io/torchgnn/) provides utilities
 to create GNN models with multiple layers.
 
-- `gcn_conv_model()`
-- `gcn_general_model()`
+- [`model_gcn()`](https://josiahparry.github.io/torchgnn/reference/model_gcn.md)
+- [`model_gcn_general()`](https://josiahparry.github.io/torchgnn/reference/model_gcn_general.md)
 - [`model_sage()`](https://josiahparry.github.io/torchgnn/reference/model_sage.md)
+- [`model_gat()`](https://josiahparry.github.io/torchgnn/reference/model_gat.md)
+- [`model_gin()`](https://josiahparry.github.io/torchgnn/reference/model_gin.md)
 
 ``` r
 
 library(torchgnn)
 
-gcn_general_model(
+model_gcn_general(
   in_features = 50,
   hidden_dims = c(32, 16),
   out_features = 1
@@ -48,6 +66,14 @@ An `nn_module` containing 4,305 parameters.
 ── Modules ─────────────────────────────────────────────────────────────────────
 • layers: <nn_module_list> #4,305 parameters
 ```
+
+### Pooling
+
+Node embeddings are reduced to graph-level representations with
+[`pool_global_add()`](https://josiahparry.github.io/torchgnn/reference/pooling.md),
+[`pool_global_mean()`](https://josiahparry.github.io/torchgnn/reference/pooling.md),
+and
+[`pool_global_max()`](https://josiahparry.github.io/torchgnn/reference/pooling.md).
 
 ### Aggregators
 
@@ -243,7 +269,7 @@ split <- graph_split(X, seed = 42)
 ``` r
 
 # define a 2 layer GCN model
-model <- gcn_conv_model(
+model <- model_gcn(
   # number of variables
   in_features = 500,
   # define our hidden layers
@@ -303,11 +329,11 @@ for (epoch in 1:n_epochs) {
 ```
 
 ``` R
-Epoch 20 | Loss: 0.8129 | Val Acc: 0.8022
-Epoch 40 | Loss: 0.5767 | Val Acc: 0.8349
-Epoch 60 | Loss: 0.4758 | Val Acc: 0.8463
-Epoch 80 | Loss: 0.4317 | Val Acc: 0.8590
-Epoch 100 | Loss: 0.4001 | Val Acc: 0.8618
+Epoch 20 | Loss: 0.7697 | Val Acc: 0.8085
+Epoch 40 | Loss: 0.5386 | Val Acc: 0.8384
+Epoch 60 | Loss: 0.4502 | Val Acc: 0.8529
+Epoch 80 | Loss: 0.4146 | Val Acc: 0.8623
+Epoch 100 | Loss: 0.3883 | Val Acc: 0.8681
 ```
 
 ``` r
@@ -325,7 +351,7 @@ cat(sprintf("Test Accuracy: %.4f\n", test_acc))
 ```
 
 ``` R
-Test Accuracy: 0.8570
+Test Accuracy: 0.8593
 ```
 
 # Package index
@@ -346,6 +372,8 @@ Graph neural network layer implementations
   : Graph Isomorphism Network Layer (Xu et al. 2019)
 - [`layer_regconv()`](https://josiahparry.github.io/torchgnn/reference/layer_regconv.md)
   : Regional GCN Convolutional Layer (Guo et al. 2025)
+- [`layer_layer_norm()`](https://josiahparry.github.io/torchgnn/reference/layer_layer_norm.md)
+  : Layer Normalization (Ba et al. 2016)
 
 ## Models
 
@@ -375,7 +403,7 @@ Functions for constructing and manipulating graphs
 - [`gcn_normalize()`](https://josiahparry.github.io/torchgnn/reference/adjacency.md)
   [`adj_row_normalize()`](https://josiahparry.github.io/torchgnn/reference/adjacency.md)
   [`add_graph_self_loops()`](https://josiahparry.github.io/torchgnn/reference/adjacency.md)
-  : Add self-loops to a graph
+  : Normalize an Adjacency Matrix
 
 ## Pooling
 
@@ -398,7 +426,5 @@ Message passing aggregators for combining neighbor features
   [`ProductAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
   [`VarAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
   [`StdAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
-  [`LSTMAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
-  [`SoftmaxAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
   : Message Passing Aggregators
 

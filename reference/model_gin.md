@@ -46,15 +46,6 @@ model_gin(
 
   Function or NULL. Activation for output layer. Default: NULL
 
-- x:
-
-  Tensor `n_nodes x in_features`. Node feature matrix (dense or sparse)
-
-- adj:
-
-  Sparse torch tensor `n_nodes x n_nodes`. Adjacency matrix defining
-  graph structure. Must be a sparse COO tensor.
-
 ## Value
 
 Tensor `n_nodes x out_features`. Final predictions
@@ -74,6 +65,13 @@ self features, and applies a 2-layer MLP transformation.
 
 ## Forward pass
 
+`model(x, adj)`
+
+- `x`: Tensor `n_nodes x in_features`. Node feature matrix.
+
+- `adj`: Sparse COO tensor `n_nodes x n_nodes`. Adjacency matrix
+  defining graph structure.
+
 ## References
 
 Xu, K., Hu, W., Leskovec, J., & Jegelka, S. (2019). How Powerful are
@@ -83,19 +81,24 @@ Representations. <doi:10.48550/arXiv.1810.00826>
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # torch::torch_is_installed()
+adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+x <- torch::torch_randn(4, 14)
+
 # Binary classification
-model <- model_gin(14, c(64, 64), 1, output_activation = nnf_sigmoid)
+model <- model_gin(14, c(64, 64), 1, out_activation = torch::nnf_sigmoid)
+model(x, adj)
 
 # Multi-class classification
 model <- model_gin(
   14,
   c(64, 64),
   3,
-  output_activation = function(x) nnf_softmax(x, dim = -1)
+  out_activation = function(x) torch::nnf_softmax(x, dim = -1)
 )
+model(x, adj)
 
 # With learnable epsilon
-model <- model_gin(14, c(128), 1, learn_eps = TRUE)
-} # }
+model_gin(14, c(128), 1, learn_eps = TRUE)
+}
 ```

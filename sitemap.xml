@@ -1,6 +1,8 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://josiahparry.github.io/torchgnn/404.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/CLAUDE.html</loc></url>
+<url><loc>https://josiahparry.github.io/torchgnn/LICENSE-text.html</loc></url>
+<url><loc>https://josiahparry.github.io/torchgnn/LICENSE.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/authors.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/index.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/news/index.html</loc></url>
@@ -13,6 +15,7 @@
 <url><loc>https://josiahparry.github.io/torchgnn/reference/layer_gcn.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/layer_gcn_general.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/layer_gin.html</loc></url>
+<url><loc>https://josiahparry.github.io/torchgnn/reference/layer_layer_norm.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/layer_regconv.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/layer_sage.html</loc></url>
 <url><loc>https://josiahparry.github.io/torchgnn/reference/model_gat.html</loc></url>

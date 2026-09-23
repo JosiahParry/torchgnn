@@ -46,3 +46,23 @@ These functions implement different reduction strategies:
 - `pool_global_mean`: Mean of node features per graph
 
 - `pool_global_max`: Element-wise maximum of node features per graph
+
+## Examples
+
+``` r
+if (FALSE) { # torch::torch_is_installed()
+x <- torch::torch_tensor(
+  matrix(c(1, 2, 3, 4, 5, 6, 7, 8), nrow = 4, byrow = TRUE)
+)
+
+# Two graphs of two nodes each
+batch <- torch::torch_tensor(c(1, 1, 2, 2), dtype = torch::torch_long())
+
+pool_global_add(x, batch)
+pool_global_mean(x, batch)
+pool_global_max(x, batch)
+
+# Without a batch vector every node belongs to one graph
+pool_global_mean(x)
+}
+```

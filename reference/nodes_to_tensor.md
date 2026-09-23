@@ -24,4 +24,17 @@ nodes_to_tensor(nodes, adj = NULL, node_id = NULL)
 
 ## Value
 
-Dense tensor of shape `[n_nodes, n_features]`
+A dense `torch_tensor` of dimension `n_nodes x n_features`. When `adj`
+and `node_id` are both supplied, rows are reordered to match the node
+ordering of `adj` and the identifier column is dropped.
+
+## Examples
+
+``` r
+if (FALSE) { # torch::torch_is_installed()
+adj <- adj_from_edgelist(from = c("a", "b", "c"), to = c("b", "c", "a"))
+nodes <- data.frame(id = c("c", "a", "b"), deg = c(2, 2, 2), pop = c(10, 20, 30))
+
+nodes_to_tensor(nodes, adj, node_id = "id")
+}
+```

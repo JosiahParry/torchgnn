@@ -16,6 +16,8 @@ Graph neural network layer implementations
   : Graph Isomorphism Network Layer (Xu et al. 2019)
 - [`layer_regconv()`](https://josiahparry.github.io/torchgnn/reference/layer_regconv.md)
   : Regional GCN Convolutional Layer (Guo et al. 2025)
+- [`layer_layer_norm()`](https://josiahparry.github.io/torchgnn/reference/layer_layer_norm.md)
+  : Layer Normalization (Ba et al. 2016)
 
 ## Models
 
@@ -45,7 +47,7 @@ Functions for constructing and manipulating graphs
 - [`gcn_normalize()`](https://josiahparry.github.io/torchgnn/reference/adjacency.md)
   [`adj_row_normalize()`](https://josiahparry.github.io/torchgnn/reference/adjacency.md)
   [`add_graph_self_loops()`](https://josiahparry.github.io/torchgnn/reference/adjacency.md)
-  : Add self-loops to a graph
+  : Normalize an Adjacency Matrix
 
 ## Pooling
 
@@ -68,6 +70,4 @@ Message passing aggregators for combining neighbor features
   [`ProductAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
   [`VarAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
   [`StdAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
-  [`LSTMAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
-  [`SoftmaxAggregator()`](https://josiahparry.github.io/torchgnn/reference/aggregator.md)
   : Message Passing Aggregators

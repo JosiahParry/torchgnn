@@ -53,16 +53,10 @@ layer_gcn_general(in_features, out_features, bias = TRUE, normalize = FALSE)
 
   Logical. Add learnable bias term (\\\Psi\\). Default: TRUE
 
-- x:
+- normalize:
 
-  Tensor `n_nodes x in_features`. Node feature matrix
-
-- adj:
-
-  Tensor `n_nodes x n_nodes`. Adjacency matrix. Expected to be
-  row-normalized \\D^{-1}A\\ where \\D\\ is the degree matrix. Can be
-  binary or weighted. This layer does NOT perform normalization
-  internally
+  Logical. Whether to add self-loops and row-normalize the adjacency
+  matrix on-the-fly. Default: FALSE
 
 ## Value
 
@@ -77,6 +71,14 @@ internally.
 
 ## Forward pass
 
+`layer(x, adj)`
+
+- `x`: Tensor `n_nodes x in_features`. Node feature matrix.
+
+- `adj`: Sparse COO tensor `n_nodes x n_nodes`. Adjacency matrix. Unless
+  `normalize = TRUE`, it is expected to be row-normalized \\D^{-1}A\\,
+  where \\D\\ is the degree matrix. Can be binary or weighted.
+
 ## References
 
 Hamilton, W. L. (2020). Graph Representation Learning. In Synthesis
@@ -87,3 +89,18 @@ Guo, H., Wang, H., Zhu, D., Wu, L., Fotheringham, A. S., & Liu, Y.
 (2025). RegionGCN: Spatial-Heterogeneity-Aware Graph Convolutional
 Networks. Annals of the American Association of Geographers, 1–17.
 <doi:10.1080/24694452.2025.2558661>
+
+## Examples
+
+``` r
+if (FALSE) { # torch::torch_is_installed()
+adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+x <- torch::torch_randn(4, 8)
+
+# This layer expects a row-normalized adjacency matrix
+adj_norm <- adj_row_normalize(add_graph_self_loops(adj))
+
+layer <- layer_gcn_general(8, 4)
+layer(x, adj_norm)
+}
+```

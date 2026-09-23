@@ -56,18 +56,30 @@ For GCN training, you use:
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+nodes <- data.frame(id = 1:100, feature = seq(0, 1, length.out = 100))
+
 # Standard 60/20/20 split
-split <- graph_split(A_sparse, seed = 42)
+split <- graph_split(nodes, seed = 42)
+lengths(split[c("train_id", "val_id", "test_id")])
+#> train_id   val_id  test_id 
+#>       60       20       20 
 
 # Custom split (70/15/15)
-split <- graph_split(A_sparse, prop = c(0.7, 0.15, 0.15))
+graph_split(nodes, prop = c(0.7, 0.15, 0.15), seed = 42)
+#> <graph_split>
+#> named list [1:4] 
+#> $ data    :'data.frame': 100 obs. of  2 variables:
+#>  ..$ id     : int [1:100] 1 2 3 4 5 6 7 8 9 10 ...
+#>  ..$ feature: num [1:100] 0 0.0101 0.0202 0.0303 0.0404 ...
+#> $ train_id: int [1:70] 49 65 25 74 18 100 47 24 71 89 ...
+#> $ val_id  : int [1:15] 17 32 48 14 72 23 99 57 70 97 ...
+#> $ test_id : int [1:15] 62 59 75 46 1 60 19 90 77 85 ...
+#> @ prop: num [1:3] 0.7 0.15 0.15
 
 # Two-way split (80/20 train/test)
-split <- graph_split(A_sparse, prop = c(0.8, 0.2))
+split <- graph_split(nodes, prop = c(0.8, 0.2), seed = 42)
 
-# Use in training
-predictions <- model(X, A_sparse)
-train_loss <- nnf_mse_loss(predictions[split$train_id], y[split$train_id])
-} # }
+# The identifiers select which rows contribute to the loss
+head(split$train_id)
+#> [1]  49  65  25  74  18 100
 ```

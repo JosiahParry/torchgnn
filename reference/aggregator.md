@@ -1,8 +1,9 @@
 # Message Passing Aggregators
 
 Aggregators combine neighbor node features in graph neural networks.
-Each aggregator implements a different reduction operation (sum, mean,
-max, etc.) to aggregate features from neighboring nodes.
+Each aggregator implements a different reduction over the features of a
+node's neighbors, and is passed to a layer that consumes one, such as
+[`layer_sage()`](https://josiahparry.github.io/torchgnn/reference/layer_sage.md).
 
 ## Usage
 
@@ -22,27 +23,24 @@ ProductAggregator()
 VarAggregator()
 
 StdAggregator()
-
-LSTMAggregator(in_features, hidden_features = NULL)
-
-SoftmaxAggregator(in_features, learn = TRUE)
 ```
 
 ## Arguments
 
-- adj:
+- name:
 
-  Sparse torch tensor `n_nodes x n_nodes`. Adjacency matrix defining
-  graph structure. Must be a sparse COO tensor.
+  Character scalar. Short identifier for the reduction, such as `"sum"`
+  or `"mean"`.
 
-- tensor:
+- learnable:
 
-  Torch tensor `n_nodes x n_features`. Node feature matrix. Can be dense
-  or sparse.
+  Logical scalar. Whether the aggregator holds parameters that are
+  updated during training.
 
-- ...:
+## Value
 
-  Additional arguments passed to specific aggregator methods.
+An S7 object inheriting from `Aggregator`, with properties `name` and
+`learnable`.
 
 ## Details
 
@@ -62,6 +60,29 @@ Available aggregators:
 
 - `StdAggregator()`: Standard deviation of neighbor features
 
-- `LSTMAggregator()`: Not-imlemented
+`Aggregator()` is the abstract parent class and cannot be instantiated
+directly. It is exported so that user-defined aggregators can subclass
+it and register a `forward()` method.
 
-- `SoftmaxAggregator()`: Not-imlemented
+## See also
+
+[`layer_sage()`](https://josiahparry.github.io/torchgnn/reference/layer_sage.md),
+which takes an aggregator.
+
+## Examples
+
+``` r
+MeanAggregator()
+#> <torchgnn::MeanAggregator>
+#>  @ name     : chr "mean"
+#>  @ learnable: logi FALSE
+
+SumAggregator()
+#> <torchgnn::SumAggregator>
+#>  @ name     : chr "sum"
+#>  @ learnable: logi FALSE
+
+# Aggregators are passed to the layers that consume them
+S7::prop(MaxAggregator(), "name")
+#> [1] "max"
+```

@@ -44,7 +44,7 @@ model_gat(
 - activation:
 
   Function. Activation for hidden layers. Default:
-  [torch::nnf_elu](https://torch.mlverse.org/docs/reference/nnf_elu.html)
+  [nnf_elu](https://torch.mlverse.org/docs/reference/nnf_elu.html)
 
 - out_activation:
 
@@ -62,15 +62,6 @@ model_gat(
 - negative_slope:
 
   Numeric. Negative slope for LeakyReLU in attention. Default: 0.2
-
-- x:
-
-  Tensor `n_nodes x in_features`. Node feature matrix (dense or sparse)
-
-- adj:
-
-  Sparse torch tensor `n_nodes x n_nodes`. Adjacency matrix defining
-  graph structure. Must be a sparse COO tensor.
 
 ## Value
 
@@ -92,6 +83,13 @@ heads, while the output layer averages them.
 
 ## Forward pass
 
+`model(x, adj)`
+
+- `x`: Tensor `n_nodes x in_features`. Node feature matrix.
+
+- `adj`: Sparse COO tensor `n_nodes x n_nodes`. Adjacency matrix
+  defining graph structure.
+
 ## References
 
 Veličković P., Cucurull, G., Casanova, A., Romero, A., Li, P., & Bengio,
@@ -101,20 +99,25 @@ Learning Representations. <doi:10.48550/arXiv.1710.10903>
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # torch::torch_is_installed()
+adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+x <- torch::torch_randn(4, 14)
+
 # Binary classification with 8-head attention
-model <- gat_model(14, c(8, 8), 1, output_activation = nnf_sigmoid)
+model <- model_gat(14, c(8, 8), 1, out_activation = torch::nnf_sigmoid)
+model(x, adj)
 
 # Multi-class with 4 heads
-model <- gat_model(
+model <- model_gat(
   14,
   c(16, 16),
   3,
   heads = 4,
-  output_activation = function(x) nnf_softmax(x, dim = -1)
+  out_activation = function(x) torch::nnf_softmax(x, dim = -1)
 )
+model(x, adj)
 
 # Regression with custom dropout
-model <- gat_model(14, c(32, 32), 1, dropout = 0.5, att_dropout = 0.5)
-} # }
+model_gat(14, c(32, 32), 1, dropout = 0.5, att_dropout = 0.5)
+}
 ```
