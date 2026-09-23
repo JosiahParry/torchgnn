@@ -6,35 +6,47 @@ in R.
 
 ## Installation
 
-Install the development version:
+Install the released version from CRAN:
 
 ``` r
-pak::pak("josiahparry/torchgnn")
+install.packages("torchgnn")
+```
+
+Or the development version from GitHub:
+
+``` r
+pak::pak("JosiahParry/torchgnn")
 ```
 
 ## Features
 
 The following layers are implemented
 
-- `gcn_conv_layer()`: Standard GCN layer (Kipf & Welling, 2016)
-- `gcn_general_layer()`: Generalized GCN layer (Hamilton, 2020)
-- `sage_layer()`: GraphSAGE layer (Hamilton, Ying, and Leskovec, 2017)
-- `regconv_layer()`: RegionConv layer for regionalized GCN (Guo et
+- `layer_gcn()`: Standard GCN layer (Kipf & Welling, 2017)
+- `layer_gcn_general()`: Generalized GCN layer (Hamilton, 2020)
+- `layer_sage()`: GraphSAGE layer (Hamilton, Ying, and Leskovec, 2017)
+- `layer_gat()`: Graph attention layer (Veličković et al., 2018)
+- `layer_gin()`: Graph isomorphism layer (Xu et al., 2019)
+- `layer_regconv()`: RegionConv layer for regionalized GCN (Guo et
   al. 2025)
+- `layer_layer_norm()`: Layer normalization over graphs or nodes (Ba et
+  al., 2016)
 
 ### Models
 
 `{torchgnn}` provides utilities to create GNN models with multiple
 layers.
 
-- `gcn_conv_model()`
-- `gcn_general_model()`
+- `model_gcn()`
+- `model_gcn_general()`
 - `model_sage()`
+- `model_gat()`
+- `model_gin()`
 
 ``` r
 library(torchgnn)
 
-gcn_general_model(
+model_gcn_general(
   in_features = 50,
   hidden_dims = c(32, 16),
   out_features = 1
@@ -45,6 +57,11 @@ gcn_general_model(
 
     ── Modules ─────────────────────────────────────────────────────────────────────
     • layers: <nn_module_list> #4,305 parameters
+
+### Pooling
+
+Node embeddings are reduced to graph-level representations with
+`pool_global_add()`, `pool_global_mean()`, and `pool_global_max()`.
 
 ### Aggregators
 
@@ -217,7 +234,7 @@ split <- graph_split(X, seed = 42)
 
 ``` r
 # define a 2 layer GCN model
-model <- gcn_conv_model(
+model <- model_gcn(
   # number of variables
   in_features = 500,
   # define our hidden layers
@@ -273,11 +290,11 @@ for (epoch in 1:n_epochs) {
 }
 ```
 
-    Epoch 20 | Loss: 0.8129 | Val Acc: 0.8022
-    Epoch 40 | Loss: 0.5767 | Val Acc: 0.8349
-    Epoch 60 | Loss: 0.4758 | Val Acc: 0.8463
-    Epoch 80 | Loss: 0.4317 | Val Acc: 0.8590
-    Epoch 100 | Loss: 0.4001 | Val Acc: 0.8618
+    Epoch 20 | Loss: 0.7697 | Val Acc: 0.8085
+    Epoch 40 | Loss: 0.5386 | Val Acc: 0.8384
+    Epoch 60 | Loss: 0.4502 | Val Acc: 0.8529
+    Epoch 80 | Loss: 0.4146 | Val Acc: 0.8623
+    Epoch 100 | Loss: 0.3883 | Val Acc: 0.8681
 
 ``` r
 model$eval()
@@ -292,4 +309,4 @@ with_no_grad({
 cat(sprintf("Test Accuracy: %.4f\n", test_acc))
 ```
 
-    Test Accuracy: 0.8570
+    Test Accuracy: 0.8593

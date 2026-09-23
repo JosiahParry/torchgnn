@@ -3,8 +3,14 @@
 ^pkgdown$
 ^\.github$
 ^examples$
-CLAUDE.md
-.gitignore
-GCN.qmd
 ^misc$
 ^data$
+^CLAUDE\.md$
+^\.gitignore$
+^GCN\.qmd$
+^justfile$
+^README\.qmd$
+^LICENSE\.md$
+^cran-comments\.md$
+^CRAN-SUBMISSION$
+^\.Rproj\.user$

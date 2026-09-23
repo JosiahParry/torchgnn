@@ -12,17 +12,6 @@ layer_regconv(in_features, out_features, n_regions)
 \item{out_features}{Integer. Number of output features per node}
 
 \item{n_regions}{Integer. Number of spatial regions/regimes}
-
-\item{x}{Tensor \verb{n_nodes x in_features}. Node feature matrix}
-
-\item{adj}{Tensor \verb{n_nodes x n_nodes}. Adjacency matrix. Expected to be row-normalized
-\eqn{D^{-1}A} where \eqn{D} is the degree matrix. Can be binary or weighted}
-
-\item{region_assignments}{Tensor \code{n_nodes}. Integer vector with values in \code{1:n_regions},
-indicating which region each node belongs to. Multiple nodes can belong to the same region}
-
-\item{edge_weight}{Tensor \verb{n_nodes x n_nodes} or NULL. Optional edge weights to
-apply to the adjacency matrix. If NULL, uses values from \code{adj}. Default: NULL}
 }
 \value{
 Tensor \verb{n_nodes x out_features}. Transformed node features (before activation)
@@ -60,8 +49,36 @@ spatial regimes, enabling the model to capture spatial heterogeneity.
 }
 \section{Forward pass}{
 
+\code{layer(x, adj, region_assignments, edge_weight = NULL)}
+\itemize{
+\item \code{x}: Tensor \verb{n_nodes x in_features}. Node feature matrix.
+\item \code{adj}: Sparse COO tensor \verb{n_nodes x n_nodes}. Adjacency matrix, expected
+to be row-normalized \eqn{D^{-1}A} where \eqn{D} is the degree matrix.
+Can be binary or weighted.
+\item \code{region_assignments}: Tensor \code{n_nodes}. Integer vector with values in
+\code{1:n_regions} giving the region each node belongs to. Multiple nodes can
+belong to the same region.
+\item \code{edge_weight}: Tensor \verb{n_nodes x n_nodes} or \code{NULL}. Optional edge
+weights applied to the adjacency matrix. If \code{NULL}, the values of \code{adj}
+are used.
+}
 }
 
+\examples{
+\dontshow{if (torch::torch_is_installed()) withAutoprint(\{ # examplesIf}
+adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+x <- torch::torch_randn(4, 8)
+
+# This layer expects a row-normalized adjacency matrix
+adj_norm <- adj_row_normalize(add_graph_self_loops(adj))
+
+# Four nodes split across two spatial regimes
+regions <- torch::torch_tensor(c(1, 1, 2, 2), dtype = torch::torch_long())
+
+layer <- layer_regconv(8, 4, n_regions = 2)
+layer(x, adj_norm, regions)
+\dontshow{\}) # examplesIf}
+}
 \references{
 Guo, H., Wang, H., Zhu, D., Wu, L., Fotheringham, A. S., & Liu, Y. (2025).
 RegionGCN: Spatial-Heterogeneity-Aware Graph Convolutional Networks. Annals

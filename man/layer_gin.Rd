@@ -14,11 +14,6 @@ layer_gin(in_features, out_features, eps = 0, learn_eps = FALSE)
 \item{eps}{Numeric. Initial value for epsilon. Default: 0}
 
 \item{learn_eps}{Logical. Whether to learn epsilon parameter. Default: FALSE}
-
-\item{x}{Tensor \verb{n_nodes x in_features}. Node feature matrix}
-
-\item{adj}{Sparse torch tensor \verb{n_nodes x n_nodes}. Adjacency matrix defining graph
-structure. Must be a sparse COO tensor.}
 }
 \value{
 Tensor \verb{n_nodes x out_features}. Transformed node features
@@ -47,8 +42,27 @@ The epsilon parameter can be learned or fixed at 0.
 }
 \section{Forward pass}{
 
+\code{layer(x, adj)}
+\itemize{
+\item \code{x}: Tensor \verb{n_nodes x in_features}. Node feature matrix.
+\item \code{adj}: Sparse COO tensor \verb{n_nodes x n_nodes}. Adjacency matrix defining
+graph structure.
+}
 }
 
+\examples{
+\dontshow{if (torch::torch_is_installed()) withAutoprint(\{ # examplesIf}
+adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+x <- torch::torch_randn(4, 8)
+
+layer <- layer_gin(8, 4)
+layer(x, adj)
+
+# Learn the weight given to a node's own features
+layer <- layer_gin(8, 4, learn_eps = TRUE)
+layer(x, adj)
+\dontshow{\}) # examplesIf}
+}
 \references{
 Xu, K., Hu, W., Leskovec, J., & Jegelka, S. (2019). How Powerful are Graph
 Neural Networks? International Conference on Learning Representations.

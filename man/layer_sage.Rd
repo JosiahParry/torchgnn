@@ -22,11 +22,6 @@ layer_sage(
 \item{bias}{Logical. Add learnable bias. Default: TRUE}
 
 \item{concat}{Logical. If TRUE, concatenates self and neighbor features. If FALSE, adds them. Default: TRUE}
-
-\item{x}{Tensor \verb{n_nodes x in_features}. Node feature matrix (dense or sparse)}
-
-\item{adj}{Sparse torch tensor \verb{n_nodes x n_nodes}. Adjacency matrix defining graph structure.
-Must be a sparse COO tensor.}
 }
 \value{
 Tensor \verb{n_nodes x out_features}. Transformed node features
@@ -59,8 +54,31 @@ without normalization.
 }
 \section{Forward pass}{
 
+\code{layer(x, adj)}
+\itemize{
+\item \code{x}: Tensor \verb{n_nodes x in_features}. Node feature matrix.
+\item \code{adj}: Sparse COO tensor \verb{n_nodes x n_nodes}. Adjacency matrix defining
+graph structure.
+}
 }
 
+\examples{
+\dontshow{if (torch::torch_is_installed()) withAutoprint(\{ # examplesIf}
+adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+x <- torch::torch_randn(4, 8)
+
+layer <- layer_sage(8, 4)
+layer(x, adj)
+
+# Any aggregator can be supplied
+layer <- layer_sage(8, 4, aggregator = MaxAggregator())
+layer(x, adj)
+
+# Add self and neighbor features instead of concatenating them
+layer <- layer_sage(8, 4, concat = FALSE)
+layer(x, adj)
+\dontshow{\}) # examplesIf}
+}
 \references{
 Hamilton, W., Ying, Z., & Leskovec, J. (2017). Inductive representation learning
 on large graphs. Advances in Neural Information Processing Systems, 30. \url{doi:10.48550/arXiv.1706.02216}

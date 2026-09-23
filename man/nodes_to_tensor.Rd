@@ -14,8 +14,18 @@ nodes_to_tensor(nodes, adj = NULL, node_id = NULL)
 \item{node_id}{Column name for node IDs}
 }
 \value{
-Dense tensor of shape \verb{[n_nodes, n_features]}
+A dense \code{torch_tensor} of dimension \verb{n_nodes x n_features}. When
+\code{adj} and \code{node_id} are both supplied, rows are reordered to match the
+node ordering of \code{adj} and the identifier column is dropped.
 }
 \description{
 Convert Node Features to Tensor
+}
+\examples{
+\dontshow{if (torch::torch_is_installed()) withAutoprint(\{ # examplesIf}
+adj <- adj_from_edgelist(from = c("a", "b", "c"), to = c("b", "c", "a"))
+nodes <- data.frame(id = c("c", "a", "b"), deg = c(2, 2, 2), pop = c(10, 20, 30))
+
+nodes_to_tensor(nodes, adj, node_id = "id")
+\dontshow{\}) # examplesIf}
 }

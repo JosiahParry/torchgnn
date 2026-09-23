@@ -26,19 +26,24 @@
 #'   layer's output dimension. Default: NULL
 #'
 #' @section Forward pass:
-#' @param x Tensor `n_nodes x in_features`. Node feature matrix (dense or sparse)
-#' @param adj Sparse torch tensor `n_nodes x n_nodes`. Adjacency matrix defining graph
-#'   structure. Must be a sparse COO tensor.
-#' @param batch Tensor or NULL. Batch vector assigning each node to a graph, using
-#'   1-based graph indices. Passed to `norm`. If NULL, all nodes are treated as a
-#'   single graph.
+#' `model(x, adj, batch = NULL)`
+#'
+#' - `x`: Tensor `n_nodes x in_features`. Node feature matrix.
+#' - `adj`: Sparse COO tensor `n_nodes x n_nodes`. Adjacency matrix defining
+#'   graph structure.
+#' - `batch`: Tensor or `NULL`. Batch vector assigning each node to a graph,
+#'   using 1-based graph indices. Passed to `norm`. If `NULL`, all nodes are
+#'   treated as a single graph.
 #'
 #' @return Tensor `n_nodes x out_features`. Final predictions
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf torch::torch_is_installed()
+#' adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+#' x <- torch::torch_randn(4, 14)
+#'
 #' # Binary classification with sigmoid and mean aggregation
-#' model <- model_sage(14, c(56, 56), 1, output_activation = nnf_sigmoid)
+#' model <- model_sage(14, c(56, 56), 1, out_activation = torch::nnf_sigmoid)
+#' model(x, adj)
 #'
 #' # Multi-class with softmax and max aggregation
 #' model <- model_sage(
@@ -46,31 +51,21 @@
 #'   c(32, 32),
 #'   10,
 #'   aggregator = MaxAggregator(),
-#'   output_activation = function(x) nnf_softmax(x, dim = -1)
+#'   out_activation = function(x) torch::nnf_softmax(x, dim = -1)
 #' )
+#' model(x, adj)
 #'
 #' # Regression with sum aggregation
-#' model <- model_sage(14, c(64, 64), 1, aggregator = SumAggregator())
+#' model_sage(14, c(64, 64), 1, aggregator = SumAggregator())
 #'
 #' # With dropout and custom activation
-#' model <- model_sage(
-#'   14,
-#'   c(56, 56),
-#'   1,
-#'   activation = nnf_tanh,
-#'   dropout = 0.5
-#' )
+#' model_sage(14, c(56, 56), 1, activation = torch::torch_tanh, dropout = 0.5)
 #'
 #' # With normalization after each hidden layer
 #' model <- model_sage(14, c(56, 32), 1, norm = layer_layer_norm)
+#' model(x, adj)
 #'
-#' model <- model_sage(
-#'   14,
-#'   c(56, 32),
-#'   1,
-#'   norm = \(d) layer_layer_norm(d, mode = "node")
-#' )
-#' }
+#' model_sage(14, c(56, 32), 1, norm = \(d) layer_layer_norm(d, mode = "node"))
 #'
 #' @references
 #' Hamilton, W., Ying, Z., & Leskovec, J. (2017). Inductive representation learning

@@ -33,13 +33,18 @@
 #' @param n_regions Integer. Number of spatial regions/regimes
 #'
 #' @section Forward pass:
-#' @param x Tensor `n_nodes x in_features`. Node feature matrix
-#' @param adj Tensor `n_nodes x n_nodes`. Adjacency matrix. Expected to be row-normalized
-#'   \eqn{D^{-1}A} where \eqn{D} is the degree matrix. Can be binary or weighted
-#' @param region_assignments Tensor `n_nodes`. Integer vector with values in `1:n_regions`,
-#'   indicating which region each node belongs to. Multiple nodes can belong to the same region
-#' @param edge_weight Tensor `n_nodes x n_nodes` or NULL. Optional edge weights to
-#'   apply to the adjacency matrix. If NULL, uses values from \code{adj}. Default: NULL
+#' `layer(x, adj, region_assignments, edge_weight = NULL)`
+#'
+#' - `x`: Tensor `n_nodes x in_features`. Node feature matrix.
+#' - `adj`: Sparse COO tensor `n_nodes x n_nodes`. Adjacency matrix, expected
+#'   to be row-normalized \eqn{D^{-1}A} where \eqn{D} is the degree matrix.
+#'   Can be binary or weighted.
+#' - `region_assignments`: Tensor `n_nodes`. Integer vector with values in
+#'   `1:n_regions` giving the region each node belongs to. Multiple nodes can
+#'   belong to the same region.
+#' - `edge_weight`: Tensor `n_nodes x n_nodes` or `NULL`. Optional edge
+#'   weights applied to the adjacency matrix. If `NULL`, the values of `adj`
+#'   are used.
 #'
 #' @return Tensor `n_nodes x out_features`. Transformed node features (before activation)
 #'
@@ -48,6 +53,19 @@
 #' RegionGCN: Spatial-Heterogeneity-Aware Graph Convolutional Networks. Annals
 #' of the American Association of Geographers, 1–17.
 #' <doi:10.1080/24694452.2025.2558661>
+#'
+#' @examplesIf torch::torch_is_installed()
+#' adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+#' x <- torch::torch_randn(4, 8)
+#'
+#' # This layer expects a row-normalized adjacency matrix
+#' adj_norm <- adj_row_normalize(add_graph_self_loops(adj))
+#'
+#' # Four nodes split across two spatial regimes
+#' regions <- torch::torch_tensor(c(1, 1, 2, 2), dtype = torch::torch_long())
+#'
+#' layer <- layer_regconv(8, 4, n_regions = 2)
+#' layer(x, adj_norm, regions)
 #' @export
 layer_regconv <- nn_module(
   "RegConvLayer",

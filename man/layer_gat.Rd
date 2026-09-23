@@ -29,11 +29,6 @@ Default: TRUE}
 \item{negative_slope}{Numeric. Negative slope for LeakyReLU. Default: 0.2}
 
 \item{bias}{Logical. Add learnable bias. Default: TRUE}
-
-\item{x}{Tensor \verb{n_nodes x in_features}. Node feature matrix}
-
-\item{adj}{Sparse torch tensor \verb{n_nodes x n_nodes}. Adjacency matrix defining graph
-structure. Must be a sparse COO tensor.}
 }
 \value{
 Tensor \verb{n_nodes x (out_features * heads)} if concat=TRUE, else \verb{n_nodes x out_features}
@@ -70,8 +65,32 @@ Multi-head attention is supported via the \code{heads} parameter. When \code{hea
 }
 \section{Forward pass}{
 
+\code{layer(x, adj)}
+\itemize{
+\item \code{x}: Tensor \verb{n_nodes x in_features}. Node feature matrix.
+\item \code{adj}: Sparse COO tensor \verb{n_nodes x n_nodes}. Adjacency matrix defining
+graph structure.
+}
 }
 
+\examples{
+\dontshow{if (torch::torch_is_installed()) withAutoprint(\{ # examplesIf}
+adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+x <- torch::torch_randn(4, 8)
+
+# Single attention head
+layer <- layer_gat(8, 4)
+layer(x, adj)
+
+# Four heads, concatenated to 16 output features
+layer <- layer_gat(8, 4, heads = 4)
+dim(layer(x, adj))
+
+# Four heads, averaged to 4 output features
+layer <- layer_gat(8, 4, heads = 4, concat = FALSE)
+dim(layer(x, adj))
+\dontshow{\}) # examplesIf}
+}
 \references{
 Veličković, P., Cucurull, G., Casanova, A., Romero, A., Liò, P., & Bengio, Y. (2018).
 Graph Attention Networks. International Conference on Learning Representations.

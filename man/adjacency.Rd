@@ -4,7 +4,7 @@
 \alias{gcn_normalize}
 \alias{adj_row_normalize}
 \alias{add_graph_self_loops}
-\title{Add self-loops to a graph}
+\title{Normalize an Adjacency Matrix}
 \usage{
 gcn_normalize(adj)
 
@@ -13,8 +13,42 @@ adj_row_normalize(adj)
 add_graph_self_loops(adj)
 }
 \arguments{
-\item{adj}{a sparse COO tensor of the adjacency matrix. Can be weighted.}
+\item{adj}{Sparse COO \code{torch_tensor} \verb{n_nodes x n_nodes}. The adjacency
+matrix, which may be weighted.}
+}
+\value{
+A coalesced sparse COO \code{torch_tensor} of the same dimension as
+\code{adj}.
 }
 \description{
-Add self-loops to a graph
+Prepare a sparse adjacency matrix for message passing.
+\itemize{
+\item \code{gcn_normalize()} applies the symmetric normalization
+\eqn{D^{-1/2} A D^{-1/2}} of Kipf and Welling (2017).
+\item \code{adj_row_normalize()} applies the row normalization \eqn{D^{-1} A}, so
+that the weights of each node's neighbors sum to one.
+\item \code{add_graph_self_loops()} replaces any existing diagonal entries with
+unit self-loops, giving \eqn{A + I}.
+}
+
+Isolated nodes have degree zero. Their normalization factor is set to zero
+rather than being allowed to diverge, so they contribute nothing to the
+aggregation.
+}
+\examples{
+\dontshow{if (torch::torch_is_installed()) withAutoprint(\{ # examplesIf}
+adj <- adj_from_edgelist(from = c(1, 2, 3), to = c(2, 3, 1))
+
+gcn_normalize(adj)
+
+adj_row_normalize(adj)
+
+# The usual pre-processing for a GCN layer
+gcn_normalize(add_graph_self_loops(adj))
+\dontshow{\}) # examplesIf}
+}
+\references{
+Kipf, T. N., & Welling, M. (2017). Semi-supervised classification with
+graph convolutional networks. International Conference on Learning
+Representations. \url{doi:10.48550/arXiv.1609.02907}
 }

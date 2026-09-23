@@ -29,15 +29,32 @@
 #' @param concat Logical. If TRUE, concatenates self and neighbor features. If FALSE, adds them. Default: TRUE
 #'
 #' @section Forward pass:
-#' @param x Tensor `n_nodes x in_features`. Node feature matrix (dense or sparse)
-#' @param adj Sparse torch tensor `n_nodes x n_nodes`. Adjacency matrix defining graph structure.
-#'   Must be a sparse COO tensor.
+#' `layer(x, adj)`
+#'
+#' - `x`: Tensor `n_nodes x in_features`. Node feature matrix.
+#' - `adj`: Sparse COO tensor `n_nodes x n_nodes`. Adjacency matrix defining
+#'   graph structure.
 #'
 #' @return Tensor `n_nodes x out_features`. Transformed node features
 #'
 #' @references
 #' Hamilton, W., Ying, Z., & Leskovec, J. (2017). Inductive representation learning
 #' on large graphs. Advances in Neural Information Processing Systems, 30. <doi:10.48550/arXiv.1706.02216>
+#'
+#' @examplesIf torch::torch_is_installed()
+#' adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+#' x <- torch::torch_randn(4, 8)
+#'
+#' layer <- layer_sage(8, 4)
+#' layer(x, adj)
+#'
+#' # Any aggregator can be supplied
+#' layer <- layer_sage(8, 4, aggregator = MaxAggregator())
+#' layer(x, adj)
+#'
+#' # Add self and neighbor features instead of concatenating them
+#' layer <- layer_sage(8, 4, concat = FALSE)
+#' layer(x, adj)
 #' @export
 layer_sage <- nn_module(
   "SAGELayer",

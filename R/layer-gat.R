@@ -34,9 +34,11 @@
 #' @param bias Logical. Add learnable bias. Default: TRUE
 #'
 #' @section Forward pass:
-#' @param x Tensor `n_nodes x in_features`. Node feature matrix
-#' @param adj Sparse torch tensor `n_nodes x n_nodes`. Adjacency matrix defining graph
-#'   structure. Must be a sparse COO tensor.
+#' `layer(x, adj)`
+#'
+#' - `x`: Tensor `n_nodes x in_features`. Node feature matrix.
+#' - `adj`: Sparse COO tensor `n_nodes x n_nodes`. Adjacency matrix defining
+#'   graph structure.
 #'
 #' @return Tensor `n_nodes x (out_features * heads)` if concat=TRUE, else `n_nodes x out_features`
 #'
@@ -44,6 +46,22 @@
 #' Veličković, P., Cucurull, G., Casanova, A., Romero, A., Liò, P., & Bengio, Y. (2018).
 #' Graph Attention Networks. International Conference on Learning Representations.
 #' <doi:10.48550/arXiv.1710.10903>
+#'
+#' @examplesIf torch::torch_is_installed()
+#' adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+#' x <- torch::torch_randn(4, 8)
+#'
+#' # Single attention head
+#' layer <- layer_gat(8, 4)
+#' layer(x, adj)
+#'
+#' # Four heads, concatenated to 16 output features
+#' layer <- layer_gat(8, 4, heads = 4)
+#' dim(layer(x, adj))
+#'
+#' # Four heads, averaged to 4 output features
+#' layer <- layer_gat(8, 4, heads = 4, concat = FALSE)
+#' dim(layer(x, adj))
 #' @export
 layer_gat <- nn_module(
   "GATLayer",

@@ -18,8 +18,24 @@ adj_from_edgelist(from, to, weight = NULL, n = NULL, symmetric = TRUE)
 \item{symmetric}{Make adjacency symmetric}
 }
 \value{
-Sparse COO tensor with attributes \code{node_ids} and \code{id_map}
+A sparse COO \code{torch_tensor} of dimension \verb{n x n}, carrying the
+attributes \code{node_ids} (the original node identifiers, or \code{NULL} when
+\code{from} and \code{to} are already integers) and \code{id_map} (a named integer
+vector mapping identifiers to row and column positions, or \code{NULL}).
 }
 \description{
 Create Sparse Adjacency Matrix from Edge List
+}
+\examples{
+\dontshow{if (torch::torch_is_installed()) withAutoprint(\{ # examplesIf}
+adj_from_edgelist(from = c(1, 2, 3), to = c(2, 3, 1))
+
+# Character node identifiers are mapped to positions
+adj <- adj_from_edgelist(
+  from = c("a", "b", "c"),
+  to = c("b", "c", "a"),
+  weight = c(0.5, 1, 2)
+)
+attr(adj, "id_map")
+\dontshow{\}) # examplesIf}
 }

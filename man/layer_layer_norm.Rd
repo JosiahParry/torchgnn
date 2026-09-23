@@ -21,15 +21,6 @@ Default: 1e-5}
 Default: TRUE}
 
 \item{mode}{Character. Either \code{"graph"} or \code{"node"}. Default: \code{"graph"}}
-
-\item{x}{Tensor \verb{n_nodes x in_features}. Node feature matrix}
-
-\item{batch}{Tensor or NULL. Batch vector assigning each node to a graph, using
-1-based graph indices (e.g. \code{c(1,1,2,2,2)}). If NULL, all nodes are treated
-as belonging to a single graph. Ignored when \code{mode = "node"}.}
-
-\item{batch_size}{Integer or NULL. Number of graphs. Calculated from \code{batch}
-if NULL.}
 }
 \value{
 Tensor \verb{n_nodes x in_features}. Normalized node features
@@ -65,22 +56,35 @@ Parameters (when \code{affine = TRUE}):
 }
 \section{Forward pass}{
 
+\code{layer(x, batch = NULL, batch_size = NULL)}
+\itemize{
+\item \code{x}: Tensor \verb{n_nodes x in_features}. Node feature matrix.
+\item \code{batch}: Tensor or \code{NULL}. Batch vector assigning each node to a graph,
+using 1-based graph indices (e.g. \code{c(1, 1, 2, 2, 2)}). If \code{NULL}, all
+nodes are treated as belonging to a single graph. Ignored when
+\code{mode = "node"}.
+\item \code{batch_size}: Integer or \code{NULL}. Number of graphs. Calculated from
+\code{batch} if \code{NULL}.
+}
 }
 
 \examples{
-\dontrun{
+\dontshow{if (torch::torch_is_installed()) withAutoprint(\{ # examplesIf}
+x <- torch::torch_randn(4, 16)
+
 norm <- layer_layer_norm(16)
 
 # Single graph
 norm(x)
 
 # Mini-batch of graphs, normalized independently
-norm(x, batch = torch_tensor(c(1, 1, 2, 2), dtype = torch_long()))
+batch <- torch::torch_tensor(c(1, 1, 2, 2), dtype = torch::torch_long())
+norm(x, batch = batch)
 
 # Per-node normalization
 norm <- layer_layer_norm(16, mode = "node")
-}
-
+norm(x)
+\dontshow{\}) # examplesIf}
 }
 \references{
 Ba, J. L., Kiros, J. R., & Hinton, G. E. (2016). Layer normalization.

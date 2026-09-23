@@ -28,11 +28,6 @@ model_gin(
 \item{dropout}{Numeric. Dropout rate (0-1) applied between layers. Default: 0.5}
 
 \item{out_activation}{Function or NULL. Activation for output layer. Default: NULL}
-
-\item{x}{Tensor \verb{n_nodes x in_features}. Node feature matrix (dense or sparse)}
-
-\item{adj}{Sparse torch tensor \verb{n_nodes x n_nodes}. Adjacency matrix defining graph
-structure. Must be a sparse COO tensor.}
 }
 \value{
 Tensor \verb{n_nodes x out_features}. Final predictions
@@ -53,25 +48,35 @@ features, and applies a 2-layer MLP transformation.
 }
 \section{Forward pass}{
 
+\code{model(x, adj)}
+\itemize{
+\item \code{x}: Tensor \verb{n_nodes x in_features}. Node feature matrix.
+\item \code{adj}: Sparse COO tensor \verb{n_nodes x n_nodes}. Adjacency matrix defining
+graph structure.
+}
 }
 
 \examples{
-\dontrun{
+\dontshow{if (torch::torch_is_installed()) withAutoprint(\{ # examplesIf}
+adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+x <- torch::torch_randn(4, 14)
+
 # Binary classification
-model <- model_gin(14, c(64, 64), 1, output_activation = nnf_sigmoid)
+model <- model_gin(14, c(64, 64), 1, out_activation = torch::nnf_sigmoid)
+model(x, adj)
 
 # Multi-class classification
 model <- model_gin(
   14,
   c(64, 64),
   3,
-  output_activation = function(x) nnf_softmax(x, dim = -1)
+  out_activation = function(x) torch::nnf_softmax(x, dim = -1)
 )
+model(x, adj)
 
 # With learnable epsilon
-model <- model_gin(14, c(128), 1, learn_eps = TRUE)
-}
-
+model_gin(14, c(128), 1, learn_eps = TRUE)
+\dontshow{\}) # examplesIf}
 }
 \references{
 Xu, K., Hu, W., Leskovec, J., & Jegelka, S. (2019). How Powerful are Graph

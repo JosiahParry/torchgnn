@@ -34,28 +34,33 @@
 #' @param mode Character. Either `"graph"` or `"node"`. Default: `"graph"`
 #'
 #' @section Forward pass:
-#' @param x Tensor `n_nodes x in_features`. Node feature matrix
-#' @param batch Tensor or NULL. Batch vector assigning each node to a graph, using
-#'   1-based graph indices (e.g. `c(1,1,2,2,2)`). If NULL, all nodes are treated
-#'   as belonging to a single graph. Ignored when `mode = "node"`.
-#' @param batch_size Integer or NULL. Number of graphs. Calculated from `batch`
-#'   if NULL.
+#' `layer(x, batch = NULL, batch_size = NULL)`
+#'
+#' - `x`: Tensor `n_nodes x in_features`. Node feature matrix.
+#' - `batch`: Tensor or `NULL`. Batch vector assigning each node to a graph,
+#'   using 1-based graph indices (e.g. `c(1, 1, 2, 2, 2)`). If `NULL`, all
+#'   nodes are treated as belonging to a single graph. Ignored when
+#'   `mode = "node"`.
+#' - `batch_size`: Integer or `NULL`. Number of graphs. Calculated from
+#'   `batch` if `NULL`.
 #'
 #' @return Tensor `n_nodes x in_features`. Normalized node features
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf torch::torch_is_installed()
+#' x <- torch::torch_randn(4, 16)
+#'
 #' norm <- layer_layer_norm(16)
 #'
 #' # Single graph
 #' norm(x)
 #'
 #' # Mini-batch of graphs, normalized independently
-#' norm(x, batch = torch_tensor(c(1, 1, 2, 2), dtype = torch_long()))
+#' batch <- torch::torch_tensor(c(1, 1, 2, 2), dtype = torch::torch_long())
+#' norm(x, batch = batch)
 #'
 #' # Per-node normalization
 #' norm <- layer_layer_norm(16, mode = "node")
-#' }
+#' norm(x)
 #'
 #' @references
 #' Ba, J. L., Kiros, J. R., & Hinton, G. E. (2016). Layer normalization.
@@ -70,7 +75,7 @@ layer_layer_norm <- nn_module(
     affine = TRUE,
     mode = c("graph", "node")
   ) {
-    mode <- rlang::arg_match(mode)
+    mode <- match.arg(mode)
 
     self$in_features <- in_features
     self$eps <- eps

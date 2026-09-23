@@ -9,8 +9,6 @@
 \alias{ProductAggregator}
 \alias{VarAggregator}
 \alias{StdAggregator}
-\alias{LSTMAggregator}
-\alias{SoftmaxAggregator}
 \title{Message Passing Aggregators}
 \usage{
 Aggregator(name = character(0), learnable = logical(0))
@@ -28,24 +26,23 @@ ProductAggregator()
 VarAggregator()
 
 StdAggregator()
-
-LSTMAggregator(in_features, hidden_features = NULL)
-
-SoftmaxAggregator(in_features, learn = TRUE)
 }
 \arguments{
-\item{adj}{Sparse torch tensor \verb{n_nodes x n_nodes}. Adjacency matrix defining
-graph structure. Must be a sparse COO tensor.}
+\item{name}{Character scalar. Short identifier for the reduction, such as
+\code{"sum"} or \code{"mean"}.}
 
-\item{tensor}{Torch tensor \verb{n_nodes x n_features}. Node feature matrix.
-Can be dense or sparse.}
-
-\item{...}{Additional arguments passed to specific aggregator methods.}
+\item{learnable}{Logical scalar. Whether the aggregator holds parameters
+that are updated during training.}
+}
+\value{
+An S7 object inheriting from \code{Aggregator}, with properties \code{name}
+and \code{learnable}.
 }
 \description{
-Aggregators combine neighbor node features in graph neural networks.
-Each aggregator implements a different reduction operation (sum, mean, max, etc.)
-to aggregate features from neighboring nodes.
+Aggregators combine neighbor node features in graph neural networks. Each
+aggregator implements a different reduction over the features of a node's
+neighbors, and is passed to a layer that consumes one, such as
+\code{\link[=layer_sage]{layer_sage()}}.
 }
 \details{
 Available aggregators:
@@ -57,7 +54,21 @@ Available aggregators:
 \item \code{ProductAggregator()}: Element-wise product of neighbor features
 \item \code{VarAggregator()}: Variance of neighbor features
 \item \code{StdAggregator()}: Standard deviation of neighbor features
-\item \code{LSTMAggregator()}: Not-imlemented
-\item \code{SoftmaxAggregator()}: Not-imlemented
 }
+
+\code{Aggregator()} is the abstract parent class and cannot be instantiated
+directly. It is exported so that user-defined aggregators can subclass it
+and register a \code{forward()} method.
+}
+\examples{
+MeanAggregator()
+
+SumAggregator()
+
+# Aggregators are passed to the layers that consume them
+S7::prop(MaxAggregator(), "name")
+
+}
+\seealso{
+\code{\link[=layer_sage]{layer_sage()}}, which takes an aggregator.
 }

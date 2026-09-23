@@ -20,43 +20,44 @@
 #' @param hidden_dims Integer vector. Dimensions of hidden layers (length = L)
 #' @param out_features Integer. Number of output features (typically 1 for regression)
 #' @param activation Function. Activation for hidden layers. Default: nnf_relu
-#' @param output_activation Function or NULL. Activation for output layer. Default: NULL
+#' @param out_activation Function or NULL. Activation for output layer. Default: NULL
 #' @param dropout Numeric. Dropout rate (0-1) applied after each hidden layer. Default: 0
 #' @param normalize Logical. Whether to add self-loops and apply symmetric normalization.
 #'   Default: TRUE
 #'
 #' @section Forward pass:
-#' @param x Tensor `n_nodes x in_features`. Node feature matrix
-#' @param adj Tensor `n_nodes x n_nodes`. Binary adjacency matrix (0/1) defining graph structure.
-#'   When `normalize = TRUE`, self-loops are added and symmetric normalization is applied
-#'   automatically
-#' @param edge_weight Tensor `n_nodes x n_nodes` or NULL. Optional edge weights to
-#'   apply to the adjacency structure. If NULL, treats all edges as having weight 1.
-#'   Passed through to all layers. Default: NULL
+#' `model(x, adj)`
+#'
+#' - `x`: Tensor `n_nodes x in_features`. Node feature matrix.
+#' - `adj`: Sparse COO tensor `n_nodes x n_nodes`. Adjacency matrix defining
+#'   graph structure. When `normalize = TRUE`, self-loops are added and
+#'   symmetric normalization is applied by each layer.
 #'
 #' @return Tensor `n_nodes x out_features`. Final predictions
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf torch::torch_is_installed()
+#' adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+#' x <- torch::torch_randn(4, 14)
+#'
+#' # Regression (no output activation)
+#' model <- model_gcn(14, c(64, 64), 1)
+#' model(x, adj)
+#'
 #' # Binary classification with sigmoid
-#' model <- model_gcn(14, c(56, 56), 1, output_activation = nnf_sigmoid)
+#' model <- model_gcn(14, c(56, 56), 1, out_activation = torch::nnf_sigmoid)
+#' model(x, adj)
 #'
 #' # Multi-class with softmax
 #' model <- model_gcn(
 #'   14,
 #'   c(32, 32),
 #'   10,
-#'   output_activation = function(x) nnf_softmax(x, dim = -1)
+#'   out_activation = function(x) torch::nnf_softmax(x, dim = -1)
 #' )
-#'
-#' # Regression (no output activation)
-#' model <- model_gcn(14, c(64, 64), 1)
+#' model(x, adj)
 #'
 #' # With dropout and tanh activation
-#' model <- model_gcn(14, c(56, 56), 1,
-#'                    activation = nnf_tanh,
-#'                    dropout = 0.5)
-#' }
+#' model_gcn(14, c(56, 56), 1, activation = torch::torch_tanh, dropout = 0.5)
 #' @export
 model_gcn <- nn_module(
   "GCNConvModel",

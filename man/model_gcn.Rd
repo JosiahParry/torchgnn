@@ -23,22 +23,12 @@ model_gcn(
 
 \item{activation}{Function. Activation for hidden layers. Default: nnf_relu}
 
+\item{out_activation}{Function or NULL. Activation for output layer. Default: NULL}
+
 \item{dropout}{Numeric. Dropout rate (0-1) applied after each hidden layer. Default: 0}
 
 \item{normalize}{Logical. Whether to add self-loops and apply symmetric normalization.
 Default: TRUE}
-
-\item{output_activation}{Function or NULL. Activation for output layer. Default: NULL}
-
-\item{x}{Tensor \verb{n_nodes x in_features}. Node feature matrix}
-
-\item{adj}{Tensor \verb{n_nodes x n_nodes}. Binary adjacency matrix (0/1) defining graph structure.
-When \code{normalize = TRUE}, self-loops are added and symmetric normalization is applied
-automatically}
-
-\item{edge_weight}{Tensor \verb{n_nodes x n_nodes} or NULL. Optional edge weights to
-apply to the adjacency structure. If NULL, treats all edges as having weight 1.
-Passed through to all layers. Default: NULL}
 }
 \value{
 Tensor \verb{n_nodes x out_features}. Final predictions
@@ -66,27 +56,38 @@ normalization when \code{normalize = TRUE}.
 }
 \section{Forward pass}{
 
+\code{model(x, adj)}
+\itemize{
+\item \code{x}: Tensor \verb{n_nodes x in_features}. Node feature matrix.
+\item \code{adj}: Sparse COO tensor \verb{n_nodes x n_nodes}. Adjacency matrix defining
+graph structure. When \code{normalize = TRUE}, self-loops are added and
+symmetric normalization is applied by each layer.
+}
 }
 
 \examples{
-\dontrun{
+\dontshow{if (torch::torch_is_installed()) withAutoprint(\{ # examplesIf}
+adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+x <- torch::torch_randn(4, 14)
+
+# Regression (no output activation)
+model <- model_gcn(14, c(64, 64), 1)
+model(x, adj)
+
 # Binary classification with sigmoid
-model <- model_gcn(14, c(56, 56), 1, output_activation = nnf_sigmoid)
+model <- model_gcn(14, c(56, 56), 1, out_activation = torch::nnf_sigmoid)
+model(x, adj)
 
 # Multi-class with softmax
 model <- model_gcn(
   14,
   c(32, 32),
   10,
-  output_activation = function(x) nnf_softmax(x, dim = -1)
+  out_activation = function(x) torch::nnf_softmax(x, dim = -1)
 )
-
-# Regression (no output activation)
-model <- model_gcn(14, c(64, 64), 1)
+model(x, adj)
 
 # With dropout and tanh activation
-model <- model_gcn(14, c(56, 56), 1,
-                   activation = nnf_tanh,
-                   dropout = 0.5)
-}
+model_gcn(14, c(56, 56), 1, activation = torch::torch_tanh, dropout = 0.5)
+\dontshow{\}) # examplesIf}
 }

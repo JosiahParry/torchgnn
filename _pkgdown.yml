@@ -12,6 +12,7 @@ reference:
   - layer_gat
   - layer_gin
   - layer_regconv
+  - layer_layer_norm
 
 - title: Models
   desc: Pre-built graph neural network models
@@ -50,6 +51,4 @@ reference:
   - ProductAggregator
   - VarAggregator
   - StdAggregator
-  - LSTMAggregator
-  - SoftmaxAggregator
 

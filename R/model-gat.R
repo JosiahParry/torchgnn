@@ -24,29 +24,34 @@
 #' @param negative_slope Numeric. Negative slope for LeakyReLU in attention. Default: 0.2
 #'
 #' @section Forward pass:
-#' @param x Tensor `n_nodes x in_features`. Node feature matrix (dense or sparse)
-#' @param adj Sparse torch tensor `n_nodes x n_nodes`. Adjacency matrix defining graph
-#'   structure. Must be a sparse COO tensor.
+#' `model(x, adj)`
+#'
+#' - `x`: Tensor `n_nodes x in_features`. Node feature matrix.
+#' - `adj`: Sparse COO tensor `n_nodes x n_nodes`. Adjacency matrix defining
+#'   graph structure.
 #'
 #' @return Tensor `n_nodes x out_features`. Final predictions
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf torch::torch_is_installed()
+#' adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+#' x <- torch::torch_randn(4, 14)
+#'
 #' # Binary classification with 8-head attention
-#' model <- gat_model(14, c(8, 8), 1, output_activation = nnf_sigmoid)
+#' model <- model_gat(14, c(8, 8), 1, out_activation = torch::nnf_sigmoid)
+#' model(x, adj)
 #'
 #' # Multi-class with 4 heads
-#' model <- gat_model(
+#' model <- model_gat(
 #'   14,
 #'   c(16, 16),
 #'   3,
 #'   heads = 4,
-#'   output_activation = function(x) nnf_softmax(x, dim = -1)
+#'   out_activation = function(x) torch::nnf_softmax(x, dim = -1)
 #' )
+#' model(x, adj)
 #'
 #' # Regression with custom dropout
-#' model <- gat_model(14, c(32, 32), 1, dropout = 0.5, att_dropout = 0.5)
-#' }
+#' model_gat(14, c(32, 32), 1, dropout = 0.5, att_dropout = 0.5)
 #'
 #' @references
 #' Veličković P., Cucurull, G., Casanova, A., Romero, A., Li, P., & Bengio, Y. (2018).

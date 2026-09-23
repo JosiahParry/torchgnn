@@ -43,18 +43,18 @@ For GCN training, you use:
 }
 }
 \examples{
-\dontrun{
+nodes <- data.frame(id = 1:100, feature = seq(0, 1, length.out = 100))
+
 # Standard 60/20/20 split
-split <- graph_split(A_sparse, seed = 42)
+split <- graph_split(nodes, seed = 42)
+lengths(split[c("train_id", "val_id", "test_id")])
 
 # Custom split (70/15/15)
-split <- graph_split(A_sparse, prop = c(0.7, 0.15, 0.15))
+graph_split(nodes, prop = c(0.7, 0.15, 0.15), seed = 42)
 
 # Two-way split (80/20 train/test)
-split <- graph_split(A_sparse, prop = c(0.8, 0.2))
+split <- graph_split(nodes, prop = c(0.8, 0.2), seed = 42)
 
-# Use in training
-predictions <- model(X, A_sparse)
-train_loss <- nnf_mse_loss(predictions[split$train_id], y[split$train_id])
-}
+# The identifiers select which rows contribute to the loss
+head(split$train_id)
 }

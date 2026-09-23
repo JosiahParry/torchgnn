@@ -27,16 +27,29 @@
 #'   on-the-fly. Default: TRUE
 #'
 #' @section Forward pass:
-#' @param x Tensor `n_nodes x in_features`. Node feature matrix
-#' @param adj Tensor `n_nodes x n_nodes`. Adjacency matrix defining graph structure.
-#'   Can be binary (0/1) or weighted. If \code{edge_weight} is provided, \code{adj}
-#'   should be binary and weights will be applied from \code{edge_weight}
+#' `layer(x, adj)`
+#'
+#' - `x`: Tensor `n_nodes x in_features`. Node feature matrix.
+#' - `adj`: Sparse COO tensor `n_nodes x n_nodes`. Adjacency matrix defining
+#'   graph structure. Can be binary (0/1) or weighted.
 #'
 #' @return Tensor `n_nodes x out_features`. Transformed node features
 #'
 #' @references
 #' Kipf, T. N., & Welling, M. (2016). Semi-supervised classification with
 #' graph convolutional networks. arXiv preprint arXiv:1609.02907. <doi:10.48550/arXiv.1609.02907>
+#'
+#' @examplesIf torch::torch_is_installed()
+#' adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+#' x <- torch::torch_randn(4, 8)
+#'
+#' layer <- layer_gcn(8, 4)
+#' layer(x, adj)
+#'
+#' # Normalize once up front and reuse across layers
+#' adj_norm <- gcn_normalize(add_graph_self_loops(adj))
+#' layer <- layer_gcn(8, 4, normalize = FALSE)
+#' layer(x, adj_norm)
 #' @export
 layer_gcn <- nn_module(
   "GCNConvLayer",
@@ -106,12 +119,16 @@ layer_gcn <- nn_module(
 #' @param in_features Integer. Number of input features per node
 #' @param out_features Integer. Number of output features per node
 #' @param bias Logical. Add learnable bias term (\eqn{\Psi}). Default: TRUE
+#' @param normalize Logical. Whether to add self-loops and row-normalize the
+#'   adjacency matrix on-the-fly. Default: FALSE
 #'
 #' @section Forward pass:
-#' @param x Tensor `n_nodes x in_features`. Node feature matrix
-#' @param adj Tensor `n_nodes x n_nodes`. Adjacency matrix. Expected to be row-normalized
-#'   \eqn{D^{-1}A} where \eqn{D} is the degree matrix. Can be binary or weighted.
-#'   This layer does NOT perform normalization internally
+#' `layer(x, adj)`
+#'
+#' - `x`: Tensor `n_nodes x in_features`. Node feature matrix.
+#' - `adj`: Sparse COO tensor `n_nodes x n_nodes`. Adjacency matrix. Unless
+#'   `normalize = TRUE`, it is expected to be row-normalized \eqn{D^{-1}A},
+#'   where \eqn{D} is the degree matrix. Can be binary or weighted.
 #'
 #' @return Tensor `n_nodes x out_features`. Transformed node features (before activation)
 #'
@@ -124,6 +141,16 @@ layer_gcn <- nn_module(
 #' RegionGCN: Spatial-Heterogeneity-Aware Graph Convolutional Networks. Annals
 #' of the American Association of Geographers, 1–17.
 #' <doi:10.1080/24694452.2025.2558661>
+#'
+#' @examplesIf torch::torch_is_installed()
+#' adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+#' x <- torch::torch_randn(4, 8)
+#'
+#' # This layer expects a row-normalized adjacency matrix
+#' adj_norm <- adj_row_normalize(add_graph_self_loops(adj))
+#'
+#' layer <- layer_gcn_general(8, 4)
+#' layer(x, adj_norm)
 #' @export
 layer_gcn_general <- nn_module(
   "GCNGeneralLayer",

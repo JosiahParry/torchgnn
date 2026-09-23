@@ -13,15 +13,15 @@ forward <- S7::new_generic("forward", "x", function(x, adj, tensor, ...) {
 #' Message Passing Aggregators
 #'
 #' @description
-#' Aggregators combine neighbor node features in graph neural networks.
-#' Each aggregator implements a different reduction operation (sum, mean, max, etc.)
-#' to aggregate features from neighboring nodes.
+#' Aggregators combine neighbor node features in graph neural networks. Each
+#' aggregator implements a different reduction over the features of a node's
+#' neighbors, and is passed to a layer that consumes one, such as
+#' [layer_sage()].
 #'
-#' @param adj Sparse torch tensor `n_nodes x n_nodes`. Adjacency matrix defining
-#'   graph structure. Must be a sparse COO tensor.
-#' @param tensor Torch tensor `n_nodes x n_features`. Node feature matrix.
-#'   Can be dense or sparse.
-#' @param ... Additional arguments passed to specific aggregator methods.
+#' @param name Character scalar. Short identifier for the reduction, such as
+#'   `"sum"` or `"mean"`.
+#' @param learnable Logical scalar. Whether the aggregator holds parameters
+#'   that are updated during training.
 #'
 #' @details
 #' Available aggregators:
@@ -32,8 +32,23 @@ forward <- S7::new_generic("forward", "x", function(x, adj, tensor, ...) {
 #' - `ProductAggregator()`: Element-wise product of neighbor features
 #' - `VarAggregator()`: Variance of neighbor features
 #' - `StdAggregator()`: Standard deviation of neighbor features
-#' - `LSTMAggregator()`: Not-imlemented
-#' - `SoftmaxAggregator()`: Not-imlemented
+#'
+#' `Aggregator()` is the abstract parent class and cannot be instantiated
+#' directly. It is exported so that user-defined aggregators can subclass it
+#' and register a `forward()` method.
+#'
+#' @return An S7 object inheriting from `Aggregator`, with properties `name`
+#'   and `learnable`.
+#'
+#' @seealso [layer_sage()], which takes an aggregator.
+#'
+#' @examples
+#' MeanAggregator()
+#'
+#' SumAggregator()
+#'
+#' # Aggregators are passed to the layers that consume them
+#' S7::prop(MaxAggregator(), "name")
 #'
 #' @rdname aggregator
 #' @export
@@ -288,8 +303,7 @@ S7::method(forward, StdAggregator) <- function(x, adj, tensor, ...) {
   variance$sqrt()
 }
 
-#' @export
-#' @rdname aggregator
+# Not yet implemented; unexported until `forward()` has a method.
 LSTMAggregator <- S7::new_class(
   "LSTMAggregator",
   parent = Aggregator,
@@ -320,8 +334,7 @@ S7::method(forward, LSTMAggregator) <- function(x, adj, tensor, ...) {
   stop("LSTMAggregator not yet implemented for sparse adjacency")
 }
 
-#' @export
-#' @rdname aggregator
+# Not yet implemented; unexported until `forward()` has a method.
 SoftmaxAggregator <- S7::new_class(
   "SoftmaxAggregator",
   parent = Aggregator,

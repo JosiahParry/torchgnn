@@ -24,9 +24,11 @@
 #' @param learn_eps Logical. Whether to learn epsilon parameter. Default: FALSE
 #'
 #' @section Forward pass:
-#' @param x Tensor `n_nodes x in_features`. Node feature matrix
-#' @param adj Sparse torch tensor `n_nodes x n_nodes`. Adjacency matrix defining graph
-#'   structure. Must be a sparse COO tensor.
+#' `layer(x, adj)`
+#'
+#' - `x`: Tensor `n_nodes x in_features`. Node feature matrix.
+#' - `adj`: Sparse COO tensor `n_nodes x n_nodes`. Adjacency matrix defining
+#'   graph structure.
 #'
 #' @return Tensor `n_nodes x out_features`. Transformed node features
 #'
@@ -34,6 +36,17 @@
 #' Xu, K., Hu, W., Leskovec, J., & Jegelka, S. (2019). How Powerful are Graph
 #' Neural Networks? International Conference on Learning Representations.
 #' <doi:10.48550/arXiv.1810.00826>
+#'
+#' @examplesIf torch::torch_is_installed()
+#' adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+#' x <- torch::torch_randn(4, 8)
+#'
+#' layer <- layer_gin(8, 4)
+#' layer(x, adj)
+#'
+#' # Learn the weight given to a node's own features
+#' layer <- layer_gin(8, 4, learn_eps = TRUE)
+#' layer(x, adj)
 #' @export
 layer_gin <- nn_module(
   "GINLayer",

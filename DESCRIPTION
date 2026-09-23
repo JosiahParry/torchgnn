@@ -1,20 +1,39 @@
 Package: torchgnn
-Title: Graph Neural Network Extensions for `torch`
-Version: 0.0.0.9000
-Authors@R: 
-    person("Josiah", "Parry", , "josiah.parry@gmail.com", role = c("aut", "cre"),
+Title: Graph Neural Networks for 'torch'
+Version: 0.1.0
+Authors@R:
+    person("Josiah", "Parry", , "josiah.parry@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-9910-865X"))
-Description: What the package does (one paragraph).
+Description: Build and train graph neural networks on top of the 'torch'
+    deep learning framework. Message-passing layers are provided for the
+    Graph Convolutional Network (GCN) of Kipf and Welling (2017)
+    <doi:10.48550/arXiv.1609.02907>, the GraphSAGE architecture of Hamilton,
+    Ying and Leskovec (2017) <doi:10.48550/arXiv.1706.02216>, the Graph
+    Attention Network (GAT) of Velickovic and others (2018)
+    <doi:10.48550/arXiv.1710.10903>, the Graph Isomorphism Network (GIN) of
+    Xu and others (2019) <doi:10.48550/arXiv.1810.00826>, and the regional
+    GCN of Guo and others (2025) <doi:10.1080/24694452.2025.2558661>. These
+    layers are composed into ready-made node-level and graph-level models.
+    Supporting utilities construct sparse adjacency matrices from edge
+    lists, normalize them, pool node embeddings into graph-level
+    representations, and split graphs into training, validation and test
+    sets.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Language: en
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
-Imports: 
+Imports:
+    cli,
     S7,
+    stats,
     torch (>= 0.17),
+    utils,
     vctrs
-URL: https://josiahparry.github.io/torchgnn/
-Suggests: 
+URL: https://josiahparry.github.io/torchgnn/,
+    https://github.com/JosiahParry/torchgnn
+BugReports: https://github.com/JosiahParry/torchgnn/issues
+Suggests:
+    Matrix,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.1.0.9000

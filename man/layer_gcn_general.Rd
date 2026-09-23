@@ -13,11 +13,8 @@ layer_gcn_general(in_features, out_features, bias = TRUE, normalize = FALSE)
 
 \item{bias}{Logical. Add learnable bias term (\eqn{\Psi}). Default: TRUE}
 
-\item{x}{Tensor \verb{n_nodes x in_features}. Node feature matrix}
-
-\item{adj}{Tensor \verb{n_nodes x n_nodes}. Adjacency matrix. Expected to be row-normalized
-\eqn{D^{-1}A} where \eqn{D} is the degree matrix. Can be binary or weighted.
-This layer does NOT perform normalization internally}
+\item{normalize}{Logical. Whether to add self-loops and row-normalize the
+adjacency matrix on-the-fly. Default: FALSE}
 }
 \value{
 Tensor \verb{n_nodes x out_features}. Transformed node features (before activation)
@@ -51,8 +48,27 @@ is the degree matrix. This layer does NOT perform normalization internally.
 }
 \section{Forward pass}{
 
+\code{layer(x, adj)}
+\itemize{
+\item \code{x}: Tensor \verb{n_nodes x in_features}. Node feature matrix.
+\item \code{adj}: Sparse COO tensor \verb{n_nodes x n_nodes}. Adjacency matrix. Unless
+\code{normalize = TRUE}, it is expected to be row-normalized \eqn{D^{-1}A},
+where \eqn{D} is the degree matrix. Can be binary or weighted.
+}
 }
 
+\examples{
+\dontshow{if (torch::torch_is_installed()) withAutoprint(\{ # examplesIf}
+adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+x <- torch::torch_randn(4, 8)
+
+# This layer expects a row-normalized adjacency matrix
+adj_norm <- adj_row_normalize(add_graph_self_loops(adj))
+
+layer <- layer_gcn_general(8, 4)
+layer(x, adj_norm)
+\dontshow{\}) # examplesIf}
+}
 \references{
 Hamilton, W. L. (2020). Graph Representation Learning. In Synthesis Lectures
 on Artificial Intelligence and Machine Learning. Springer International

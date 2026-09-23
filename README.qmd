@@ -7,41 +7,55 @@ Graph Neural Networks for [`{torch}`](https://mlverse.github.io/torch/) in R.
 
 ## Installation
 
-Install the development version:
+Install the released version from CRAN:
 
 ```{r, eval = FALSE}
-pak::pak("josiahparry/torchgnn")
+install.packages("torchgnn")
+```
+
+Or the development version from GitHub:
+
+```{r, eval = FALSE}
+pak::pak("JosiahParry/torchgnn")
 ```
 
 ## Features
 
 The following layers are implemented
 
-- `gcn_conv_layer()`: Standard GCN layer (Kipf & Welling, 2016)
-- `gcn_general_layer()`: Generalized GCN layer (Hamilton, 2020)
-- `sage_layer()`: GraphSAGE layer (Hamilton, Ying, and Leskovec, 2017)
-- `regconv_layer()`: RegionConv layer for regionalized GCN (Guo et al. 2025)
-
-
+- `layer_gcn()`: Standard GCN layer (Kipf & Welling, 2017)
+- `layer_gcn_general()`: Generalized GCN layer (Hamilton, 2020)
+- `layer_sage()`: GraphSAGE layer (Hamilton, Ying, and Leskovec, 2017)
+- `layer_gat()`: Graph attention layer (Veličković et al., 2018)
+- `layer_gin()`: Graph isomorphism layer (Xu et al., 2019)
+- `layer_regconv()`: RegionConv layer for regionalized GCN (Guo et al. 2025)
+- `layer_layer_norm()`: Layer normalization over graphs or nodes (Ba et al., 2016)
 
 ### Models
 
-`{torchgnn}` provides utilities to create GNN models with multiple layers. 
+`{torchgnn}` provides utilities to create GNN models with multiple layers.
 
-- `gcn_conv_model()` 
-- `gcn_general_model()` 
+- `model_gcn()`
+- `model_gcn_general()`
 - `model_sage()`
+- `model_gat()`
+- `model_gin()`
 
 
 ```{r}
 library(torchgnn)
 
-gcn_general_model(
+model_gcn_general(
   in_features = 50,
   hidden_dims = c(32, 16),
   out_features = 1
 )
 ```
+
+### Pooling
+
+Node embeddings are reduced to graph-level representations with
+`pool_global_add()`, `pool_global_mean()`, and `pool_global_max()`.
 
 
 ### Aggregators 
@@ -147,7 +161,7 @@ split <- graph_split(X, seed = 42)
 
 ```{r}
 # define a 2 layer GCN model
-model <- gcn_conv_model(
+model <- model_gcn(
   # number of variables
   in_features = 500,
   # define our hidden layers

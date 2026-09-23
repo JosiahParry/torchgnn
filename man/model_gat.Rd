@@ -28,7 +28,7 @@ model_gat(
 
 \item{out_heads}{Integer. Number of attention heads for output layer. Default: 1}
 
-\item{activation}{Function. Activation for hidden layers. Default: \link[torch:nnf_elu]{torch::nnf_elu}}
+\item{activation}{Function. Activation for hidden layers. Default: \link[torch:nnf_elu]{nnf_elu}}
 
 \item{out_activation}{Function or NULL. Activation for output layer. Default: NULL}
 
@@ -37,11 +37,6 @@ model_gat(
 \item{att_dropout}{Numeric. Dropout rate for attention coefficients. Default: 0.6}
 
 \item{negative_slope}{Numeric. Negative slope for LeakyReLU in attention. Default: 0.2}
-
-\item{x}{Tensor \verb{n_nodes x in_features}. Node feature matrix (dense or sparse)}
-
-\item{adj}{Sparse torch tensor \verb{n_nodes x n_nodes}. Adjacency matrix defining graph
-structure. Must be a sparse COO tensor.}
 }
 \value{
 Tensor \verb{n_nodes x out_features}. Final predictions
@@ -63,26 +58,36 @@ output layer averages them.
 }
 \section{Forward pass}{
 
+\code{model(x, adj)}
+\itemize{
+\item \code{x}: Tensor \verb{n_nodes x in_features}. Node feature matrix.
+\item \code{adj}: Sparse COO tensor \verb{n_nodes x n_nodes}. Adjacency matrix defining
+graph structure.
+}
 }
 
 \examples{
-\dontrun{
+\dontshow{if (torch::torch_is_installed()) withAutoprint(\{ # examplesIf}
+adj <- adj_from_edgelist(from = c(1, 2, 3, 4), to = c(2, 3, 4, 1))
+x <- torch::torch_randn(4, 14)
+
 # Binary classification with 8-head attention
-model <- gat_model(14, c(8, 8), 1, output_activation = nnf_sigmoid)
+model <- model_gat(14, c(8, 8), 1, out_activation = torch::nnf_sigmoid)
+model(x, adj)
 
 # Multi-class with 4 heads
-model <- gat_model(
+model <- model_gat(
   14,
   c(16, 16),
   3,
   heads = 4,
-  output_activation = function(x) nnf_softmax(x, dim = -1)
+  out_activation = function(x) torch::nnf_softmax(x, dim = -1)
 )
+model(x, adj)
 
 # Regression with custom dropout
-model <- gat_model(14, c(32, 32), 1, dropout = 0.5, att_dropout = 0.5)
-}
-
+model_gat(14, c(32, 32), 1, dropout = 0.5, att_dropout = 0.5)
+\dontshow{\}) # examplesIf}
 }
 \references{
 Veličković P., Cucurull, G., Casanova, A., Romero, A., Li, P., & Bengio, Y. (2018).
